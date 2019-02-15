@@ -24,7 +24,7 @@ class mx_kb_article extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $theme, $db, $phpEx, $kb_config, $mx_request_vars, $userdata;
 		global $phpbb_root_path, $mx_root_path, $module_root_path, $is_block, $images;

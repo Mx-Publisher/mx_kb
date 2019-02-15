@@ -24,7 +24,7 @@ class mx_kb_cat extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $db, $phpEx, $kb_config, $mx_request_vars, $userdata;
 		global $mx_root_path, $module_root_path, $is_block;
@@ -48,29 +48,30 @@ class mx_kb_cat extends mx_kb_public
 			switch ( $_REQUEST['sort_method'] )
 			{
 				case 'Id':
-				$this->sort_method = 't.article_id';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+				case 'viewall':
+					$this->sort_method = 't.article_id';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 				case 'Latest':
-				$this->sort_method = 't.article_date';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+					$this->sort_method = 't.article_date';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 				case 'Toprated':
-				$this->sort_method = 'rating';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+					$this->sort_method = 'rating';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 				case 'Most_popular':
-				$this->sort_method = 't.views';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+					$this->sort_method = 't.views';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 				case 'Userrank':
-				$this->sort_method = 'u.user_rank';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+					$this->sort_method = 'u.user_rank';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 				case 'Alphabetic':
-				$this->sort_method = 't.article_title';
-				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-					break;
+					$this->sort_method = 't.article_title';
+					$this->sort_method_extra = 't.article_type' . " DESC, " ;
+				break;
 			}
 		}
 
@@ -80,10 +81,10 @@ class mx_kb_cat extends mx_kb_public
 			{
 				case 'ASC':
 					$this->sort_order = 'ASC';
-					break;
+				break;
 				case 'DESC':
 					$this->sort_order = 'DESC';
-					break;
+				break;
 			}
 		}
 
@@ -142,7 +143,9 @@ class mx_kb_cat extends mx_kb_public
 		$template->set_filenames( array( 'body' => 'kb_cat_body.tpl' ) );
 
 		$template->assign_vars( array(
-			'U_CAT' => mx_append_sid( $this->this_mxurl( 'mode=cat&cat=' . $category_id ) ) )
+			'U_CAT' => mx_append_sid( $this->this_mxurl( 'mode=cat&cat=' . $category_id ) ),
+			'L_CATEGORIES' => $lang['All']
+			)
 		);
 
 		// ===================================================

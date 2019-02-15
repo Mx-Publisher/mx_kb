@@ -24,7 +24,7 @@ class mx_kb_rate extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $board_config, $phpEx, $kb_config, $db, $userdata;
 		global $phpbb_root_path, $mx_kb_user, $mx_kb_functions;

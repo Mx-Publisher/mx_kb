@@ -24,7 +24,7 @@ class mx_kb_main extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $db, $board_config, $phpEx, $kb_config, $debug;
 

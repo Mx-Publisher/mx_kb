@@ -15,8 +15,9 @@ if ( !defined( 'IN_PORTAL' ) || !defined( 'IN_ADMIN' ) )
 
 class mx_kb_settings extends mx_kb_admin
 {
-	function main( $action )
+	function main($module_id = false)
 	{
+		$action = $module_id;
 		global $db, $images, $template, $lang, $phpEx, $mx_kb_functions, $mx_kb_cache, $kb_config, $phpbb_root_path, $module_root_path, $mx_root_path, $mx_request_vars, $portal_config;
 
 		//

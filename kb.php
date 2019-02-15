@@ -96,20 +96,39 @@ if ( !defined('PORTAL_BACKEND') && @file_exists( './viewtopic.' . $phpEx ) ) // 
 else // --------------------------------------------------------------------------------- MX-Publisher Module MODE
 {
 	define( 'MXBB_MODULE', true );
-
+		
 	if ( !function_exists( 'read_block_config' ) )
 	{
 		define( 'IN_PORTAL', true );
+		
 		$mx_root_path 		= './../../';
 		$module_root_path 	= './';
-
-		$phpEx = substr(strrchr(__FILE__, '.'), 1);
+	
 		include_once( $mx_root_path . 'common.' . $phpEx );
-
-		// Start session management
+	
+		//
+		// Start session, user and style (template + theme) management
+		// - populate $userdata, $lang, $theme, $images and initiate $template.
+		//
 		$mx_user->init($user_ip, PAGE_INDEX);
 		// End session management
 
+
+		//
+		// Initiate user style (template + theme) management
+		// - populate $theme, $images and initiate $template.
+		//
+		$mx_user->init_style();
+
+		// session id check
+		if (!$mx_request_vars->is_empty_request('sid'))
+		{
+			$sid = $mx_request_vars->request('sid', MX_TYPE_NO_TAGS);
+		}
+		else
+		{
+			$sid = '';
+		}
 		define( 'MXBB_27x', file_exists( $mx_root_path . 'mx_login.' . $phpEx ) );
 
 		include_once( $module_root_path . 'kb/includes/kb_pages.' . $phpEx );
@@ -195,6 +214,7 @@ else // ------------------------------------------------------------------------
 		global $images;
 	}
 	define( 'MXBB_27x', @file_exists( $mx_root_path . 'mx_login.'.$phpEx ) );
+	define( 'MXBB_28x', @file_exists( $mx_root_path . 'includes/sessions/index.htm' ) );
 }
 
 // -------------------------------------------------------------------------------------------------------------------------
@@ -202,6 +222,12 @@ else // ------------------------------------------------------------------------
 // Start
 // -------------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------
+
+// ===================================================
+// ?
+// ===================================================
+list($trash, $mx_script_name_temp ) = preg_split(trim('//', $board_config['server_name']), PORTAL_URL);
+$mx_script_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($mx_script_name_temp));
 
 // ===================================================
 // Include the common file
@@ -223,10 +249,10 @@ switch (PORTAL_BACKEND)
 	case 'internal':
 	case 'phpbb2':
 		$is_admin = ( ( $userdata['user_level'] == ADMIN  ) && $userdata['session_logged_in'] ) ? true : 0;
-		break;
+	break;
 	case 'phpbb3':
 		$is_admin = ( $userdata['user_type'] == USER_FOUNDER ) ? true : 0;
-		break;
+	break;
 }
 
 // ===================================================
@@ -255,8 +281,10 @@ $actions = array(
 // ===================================================
 // Lets Build the page
 // ===================================================
-$mx_kb->module( $actions[$mode] );
-$mx_kb->modules[$actions[$mode]]->main( $mode );
+$page_title = $mx_user->lang('KB_title');
+
+$mx_kb->module($actions[$mode]);
+$mx_kb->modules[$actions[$mode]]->main($mode);
 
 //
 // load module header
@@ -281,7 +309,7 @@ if ( $print_version)
 	ob_start();
 }
 
-$template->pparse( 'body' );
+$template->pparse('body');
 
 if ( $print_version )
 {
@@ -297,4 +325,5 @@ if ( !$print_version )
 {
 	$mx_kb_functions->page_footer();
 }
+
 ?>

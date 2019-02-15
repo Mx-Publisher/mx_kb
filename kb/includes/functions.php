@@ -24,6 +24,32 @@ if ( !defined( 'IN_PORTAL' ) )
  */
 class mx_kb_functions
 {
+	
+	public function mx_kb_functions()
+	{
+		global $mx_cache, $mx_request_vars, $template, $mx_user, $db, $phpbb_auth;  
+		global $board_config, $phpEx, $phpbb_root_path, $mx_root_path, $module_root_path;
+		
+		$this->template 			= $template;
+		$this->user 				= $mx_user;
+		$this->db 					= $db;
+		$this->helper 				= $mx_cache;
+		$this->request 			= $mx_request_vars;
+		$this->auth 				= $phpbb_auth;
+		$this->container 			= $mx_cache;
+		$this->cache 				= $mx_cache;
+		$this->config 				= $board_config;
+		$this->pagination 			= $mx_cache;
+		$this->extension_manager	= $mx_cache;
+		$this->php_ext 				= $phpEx;
+		$this->root_path 			= $mx_root_path;
+		$this->mx_root_path 		= $mx_root_path;
+		$this->module_root_path 	= $module_root_path;
+		$this->phpbb_root_path 	= $phpbb_root_path;
+		
+		$this->ext_name = $this->request->variable('ext_name', 'mx_kb');
+	}
+	
 	/**
 	 * This class is used for general kb handling
 	 *
@@ -222,7 +248,7 @@ class mx_kb_functions
 	{
 		global $db;
 
-		$query .= ' LIMIT ' . ( ( !empty( $offset ) ) ? $offset . ', ' . $total : $total );
+		$query .= ' LIMIT ' . ( ( ($offset  !== 0) ) ? $offset . ', ' . $total : $total );
 		return $sql_cache ? $db->sql_query( $query, $sql_cache ) : $db->sql_query( $query );
 	}
 
@@ -268,8 +294,8 @@ class mx_kb_functions
 		$mx_kb->debug('kb_page_header', basename( __FILE__ ));
 
 		$template->set_filenames( array( 'kb_header' => 'kb_header.tpl' ) );
-
 		if ( $mode == 'cat' )
+		//if ( ($mode == 'cat') || ($mx_request_vars->is_request('mode') && ($mx_request_vars->request('mode', MX_TYPE_NO_TAGS, '') == 'cat')) )
 		{
 			if ( $mx_kb->modules[$mx_kb->module_name]->auth_user[$_REQUEST['cat']]['auth_post'] || $mx_kb->modules[$mx_kb->module_name]->auth_user[$_REQUEST['cat']]['auth_mod']  )
 			{
@@ -305,12 +331,18 @@ class mx_kb_functions
 			'U_ADD_ARTICLE' => $add_article_url,
 			'U_MCP' => $mcp_url,
 			'U_SEARCH' => $search_url,
-			'U_TOPRATED' => mx_append_sid( $mx_kb->this_mxurl( "mode=stats&amp;sort_method=Toprated&amp;sort_order=DESC" ) ),
+			'U_TOPRATED' => mx_append_sid( $mx_kb->this_mxurl( "&mode=stats&sort_method=Toprated&sort_order=DESC") ),
 			'L_TOPRATED' => $lang['Top_toprated'],
-			'U_MOST_POPULAR' => mx_append_sid( $mx_kb->this_mxurl( "mode=stats&amp;sort_method=Most_popular&amp;sort_order=DESC" ) ),
+			'U_MOST_POPULAR' => mx_append_sid( $mx_kb->this_mxurl( "&mode=stats&sort_method=Most_popular&sort_order=DESC") ),
 			'L_MOST_POPULAR' => $lang['Top_most_popular'],
-			'U_LATEST' => mx_append_sid( $mx_kb->this_mxurl( "mode=stats&amp;sort_method=Latest&amp;sort_order=DESC" ) ),
-			'L_LATEST' => $lang['Top_latest']
+			'U_LATEST' => mx_append_sid( $mx_kb->this_mxurl( "&mode=stats&sort_method=Latest&sort_order=DESC") ),
+			'L_LATEST' => $lang['Top_latest'],
+			'U_VIEW_ALL' => mx_append_sid($mx_kb->this_mxurl( "&mode=stats&sort_method=viewall&sort_order=DESC") ),
+			'L_VIEW_ALL' => $lang['View_All'],
+			'U_KBSTATS' => mx_append_sid($mx_kb->this_mxurl( "&mode=stats") ),
+			'L_STATS_MOST_POPULAR' => isset($lang['Top_most_popular']) ? $lang['Top_most_popular'] : $lang['Stats_Most_Popular'],
+			'L_STATS_LATEST' 	=> isset($lang['Top_latest']) ? $lang['Top_latest'] : $lang['Stats_Latest'],
+			'L_CATEGORIES' => $lang['All']
 		));
 
 		//

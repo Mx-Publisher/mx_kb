@@ -24,7 +24,7 @@ class mx_kb_post extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $mx_kb_functions, $lang, $board_config, $phpEx, $kb_config, $db, $images, $userdata;
 		global $mx_root_path, $module_root_path, $phpbb_root_path, $is_block, $mx_request_vars, $theme;
@@ -187,7 +187,7 @@ class mx_kb_post extends mx_kb_public
 
 			if ($this->auth_user[$cat_id]['auth_mod'])
          	{
-				$template->assign_block_vars( "tinyMCE_admin", array(
+				$template->assign_block_vars("tinyMCE_admin", array(
 					'PATH' => $mx_root_path,
 					'LANG' => !empty($langcode) ? $langcode : $_SERVER['HTTP_ACCEPT_LANGUAGE'],
 					'TEMPLATE' => $mx_root_path . 'templates/'. $theme['template_name'] . '/' . $theme['head_stylesheet']
@@ -195,7 +195,7 @@ class mx_kb_post extends mx_kb_public
          	}
          	else
          	{
-				$template->assign_block_vars( "tinyMCE", array(
+				$template->assign_block_vars("tinyMCE", array(
 					'PATH' => $mx_root_path,
 					'LANG' => !empty($langcode) ? $langcode : $_SERVER['HTTP_ACCEPT_LANGUAGE'],
 					'TEMPLATE' => $mx_root_path . 'templates/'. $theme['template_name'] . '/' . $theme['head_stylesheet']
@@ -210,7 +210,6 @@ class mx_kb_post extends mx_kb_public
 			$smilies_on = $kb_config['allow_smilies'] ? true : false;
 			$links_on = $kb_config['allow_links'] ? true : false;
 			$images_on = $kb_config['allow_images'] ? true : false;
-
 			$board_config['allow_html_tags'] = $kb_config['allowed_html_tags'];
 
 			$template->assign_block_vars( 'formatting', array() );

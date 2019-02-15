@@ -5,22 +5,47 @@
 		<dt class="row1" style="text-align:left;">
 		<table width="100%" cellpadding="3" cellspacing="1" class="forumline" style="border-top:none;">
 		  <tr>
+			<th align="center" class="row1"> 
+				 {L_KB_TITLE}
+			</th>
+		  </tr>
+		  <tr>
 			<td align="center" class="row1">
-			<span class="gen">&nbsp;<a href="{U_PASEARCH}" class="gen">{L_SEARCH}</a>&nbsp;
-			<!-- BEGIN ADD_LINK -->
-			&bull;&nbsp;<a href="{U_UPLOAD}" class="gen"><b>{L_UPLOAD}</b></a>&nbsp;
-			<!-- END ADD_LINK -->
-			<!-- BEGIN MCP -->
-			&bull;&nbsp;<a href="{U_MCP}" class="gen"><b>{L_MCP}</b></a>&nbsp;
-			<!-- END MCP -->
+			<span class="gen">&nbsp;<a href="{U_PASEARCH}" class="button">{L_SEARCH}</a>&nbsp;
+			<!-- IF U_ADD_ARTICLE -->
+			&nbsp;<a href="{U_ADD_ARTICLE}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_ADD_ARTICLE}" style="font-size:9px;">
+			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_ADD_ARTICLE}
+			</button></a>&nbsp;
+			<!-- ENDIF -->
+			<!-- IF U_MCP -->
+			&bull;&nbsp;<a href="{U_MCP}" class="button"><b>{L_MCP}</b></a>&nbsp;
+			<!-- ENDIF -->
 			</span><br />
 			<span class="genmed">
-			&nbsp;<a href="{U_VIEW_ALL}" class="gensmall">{L_VIEW_ALL}</a>&nbsp;
-			&bull;&nbsp;<a href="{U_DESCEND_BY_HITS}" class="gensmall">{L_STATS_MOST_POPULAR}</a>&nbsp;
+			&nbsp;<a href="{U_VIEW_ALL}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_VIEW_ALL}" style="font-size:9px;">
+			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_VIEW_ALL}
+			</button></a>&nbsp;
+			&nbsp;<a href="{U_MOST_POPULAR}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_STATS_MOST_POPULAR}" style="font-size:9px;">
+			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_STATS_MOST_POPULAR}
+			</button></a>&nbsp;
 			<!-- BEGIN switch_toprated -->
-			&bull;&nbsp;<a href="{U_DESCEND_BY_RATINGS}" class="gensmall">{L_STATS_TOPRATED}</a>&nbsp;
+			&nbsp;<a href="{U_TOPRATED}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_STATS_TOPRATED}" style="font-size:9px;">
+			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_STATS_TOPRATED}
+			</button></a>&nbsp;
 			<!-- END switch_toprated -->
-			&bull;&nbsp;<a href="{U_DESCEND_BY_JOIN}" class="gensmall">{L_STATS_LATEST}</a>&nbsp;
+			&nbsp;<a href="{U_LATEST}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_STATS_LATEST}" style="font-size:9px;">
+			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_STATS_LATEST}
+			</button></a>&nbsp;
 			</span>
 			<br /><hr>
 			</td>

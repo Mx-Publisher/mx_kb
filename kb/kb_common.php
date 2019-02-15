@@ -19,7 +19,7 @@ if ( !defined( 'IN_PORTAL' ) )
 // ===================================================
 if ( !@function_exists( 'slash_input_data' ) )
 {
-	function slash_input_data( &$data )
+	function slash_input_data( $data )
 	{
 		if ( is_array( $data ) )
 		{
@@ -37,13 +37,13 @@ if ( !@function_exists( 'slash_input_data' ) )
 // ===================================================
 if ( @phpversion() < '4.1' )
 {
-	$_GET = &$HTTP_GET_VARS;
-	$_POST = &$HTTP_POST_VARS;
-	$_COOKIE = &$HTTP_COOKIE_VARS;
-	$_SERVER = &$HTTP_SERVER_VARS;
-	$_ENV = &$HTTP_ENV_VARS;
-	$_FILES = &$HTTP_POST_FILES;
-	$_SESSION = &$HTTP_SESSION_VARS;
+	$_GET = $HTTP_GET_VARS;
+	$_POST = $HTTP_POST_VARS;
+	$_COOKIE = $HTTP_COOKIE_VARS;
+	$_SERVER = $HTTP_SERVER_VARS;
+	$_ENV = $HTTP_ENV_VARS;
+	$_FILES = $HTTP_POST_FILES;
+	$_SESSION = $HTTP_SESSION_VARS;
 }
 
 if ( !isset( $_REQUEST ) )
@@ -74,17 +74,16 @@ include_once( $module_root_path . 'kb/includes/kb_constants.' . $phpEx );
 // - Class mx_text
 // - Class mx_text_formatting
 //
-include_once( $mx_root_path . 'includes/mx_functions_tools.' . $phpEx );
+if ( !MXBB_MODULE )
+{
+	include_once( $mx_mod_path . 'includes/functions_tools.' . $phpEx );
+}
+else
+{
+	include_once( $mx_root_path . 'includes/mx_functions_tools.' . $phpEx );
+}
 
-include_once( $module_root_path . 'kb/includes/functions.' . $phpEx );
-include_once( $module_root_path . 'kb/includes/functions_auth.' . $phpEx );
-//include_once( $module_root_path . 'kb/includes/functions_mx.' . $phpEx );
-include_once( $module_root_path . 'kb/includes/functions_kb.' . $phpEx );
 
-//
-// Load a wrapper for common phpBB2 functions
-//
-include_once( $mx_root_path . 'includes/shared/phpbb2/includes/functions.' . $phpEx );
 
 // **********************************************************************
 // If phpBB mod read language definition
@@ -100,6 +99,18 @@ if ( !MXBB_MODULE )
 	{
 		include( $module_root_path . 'kb/language/lang_' . $board_config['default_lang'] . '/lang_main.' . $phpEx );
 	}
+}
+
+include_once( $module_root_path . 'kb/includes/functions.' . $phpEx );
+include_once( $module_root_path . 'kb/includes/functions_auth.' . $phpEx );
+//include_once( $module_root_path . 'kb/includes/functions_mx.' . $phpEx );
+include_once( $module_root_path . 'kb/includes/functions_kb.' . $phpEx );
+//
+// Load a wrapper for common phpBB2 functions
+//
+if ( defined('MXBB_28x') )
+{
+	include_once( $mx_root_path . 'includes/shared/phpbb2/includes/functions.' . $phpEx );
 }
 
 //

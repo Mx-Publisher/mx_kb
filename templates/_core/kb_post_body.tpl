@@ -261,7 +261,7 @@ function checkForm() {
                         theme : "advanced",
                         theme_advanced_blockformats : "p,h1,h2,h3,h4,h5,h6",
 
-                        theme_advanced_fonts : "Verdana=verdana,arial,helvetica,sans-serif;Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace",
+                        theme_advanced_fonts : "Verdana=verdana,arial,helvetica,sans-serif=Droid Serif;Arial=arial,helvetica;Courier New=courier new,courier,monospace",
 
                         theme_advanced_buttons1 : "newdocument,separator,cut,copy,paste,pastetext,pasteword,separator,formatselect,styleselect,fontsizeselect",
 
@@ -312,7 +312,7 @@ function checkForm() {
                         theme : "advanced",
                         theme_advanced_blockformats : "p,h1,h2,h3,h4,h5,h6",
 
-                        theme_advanced_fonts : "Verdana=verdana,arial,helvetica,sans-serif;Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace",
+                        theme_advanced_fonts : "Verdana=verdana,arial,helvetica,sans-serif=Droid Serif;Arial=arial,helvetica;Courier New=courier new,courier,monospace",
 
                         theme_advanced_buttons1_add_before : "newdocument,separator",
 						theme_advanced_buttons1_add : "fontselect,fontsizeselect",

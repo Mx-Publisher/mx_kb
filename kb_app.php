@@ -8,7 +8,9 @@
 *
 */
 
-if ( file_exists( './viewtopic.' . $phpEx ) ) // -------------------------------------------- phpBB MOD MODE
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+
+if ( !defined('PORTAL_BACKEND') && @file_exists( './viewtopic.' . $phpEx ) ) // -------------------------------------------- phpBB MOD MODE
 {
 	define( 'MXBB_MODULE', false );
 	define( 'IN_PHPBB', true );
@@ -16,8 +18,14 @@ if ( file_exists( './viewtopic.' . $phpEx ) ) // -------------------------------
 
 	// When run as a phpBB mod these paths are identical ;)
 	$phpbb_root_path = $module_root_path = $mx_root_path = './';
+	$mx_mod_path = $phpbb_root_path . 'mx_mod/';
 
-	$phpEx = substr(strrchr(__FILE__, '.'), 1);
+	//Check for cash mod
+	if (file_exists($phpbb_root_path . 'includes/functions_cash.'.$phpEx))
+	{
+		define('IN_CASHMOD', true);
+	}
+
 	include( $phpbb_root_path . 'common.' . $phpEx );
 
 	define( 'PAGE_KB', -501 ); // If this id generates a conflict with other mods, change it ;)
@@ -67,7 +75,7 @@ else // ------------------------------------------------------------------------
 			$url .= '&print=true';
 		}
 
-		if ( !empty( $url ) && !$mx_get_page->error )
+		if (!empty($url) && !$mx_get_page->error)
 		{
 			if ( !empty( $db ) )
 			{
@@ -106,8 +114,6 @@ else // ------------------------------------------------------------------------
 			die("Hacking attempt");
 		}
 
-		define( 'MXBB_27x', file_exists( $mx_root_path . 'mx_login.' . $phpEx ) );
-
 		//
 		// Read Block Settings (default mode)
 		//
@@ -121,9 +127,17 @@ else // ------------------------------------------------------------------------
 		$kb_type_select_var = $mx_block->get_parameters( 'kb_type_select' );
 		$kb_type_select_data = ( !empty( $kb_type_select_var ) ) ? unserialize( $kb_type_select_var ) : array();
 
+		//Check for cash mod
+		if (file_exists($phpbb_root_path . 'includes/functions_cash.'.$phpEx))
+		{
+			define('IN_CASHMOD', true);
+		}
+
 		$is_block = true;
 		global $images;
 	}
+	define( 'MXBB_27x', @file_exists( $mx_root_path . 'mx_login.'.$phpEx ) );
+	define( 'MXBB_28x', @file_exists( $mx_root_path . 'includes/sessions/index.htm' ) );
 }
 
 // -------------------------------------------------------------------------------------------------------------------------
@@ -131,6 +145,12 @@ else // ------------------------------------------------------------------------
 // Start
 // -------------------------------------------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------------------------------------
+
+// ===================================================
+// ?
+// ===================================================
+list($trash, $mx_script_name_temp ) = preg_split(trim('//', $board_config['server_name']), PORTAL_URL);
+$mx_script_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($mx_script_name_temp));
 
 // ===================================================
 // Include the common file
@@ -147,7 +167,16 @@ $kb_config['reader_mode'] = false;
 // ===================================================
 // Is admin?
 // ===================================================
-$is_admin = ( ( $userdata['user_level'] == ADMIN  ) && $userdata['session_logged_in'] ) ? true : 0;
+switch (PORTAL_BACKEND)
+{
+	case 'internal':
+	case 'phpbb2':
+		$is_admin = ( ( $userdata['user_level'] == ADMIN  ) && $userdata['session_logged_in'] ) ? true : 0;
+	break;
+	default:
+		$is_admin = ( $userdata['user_type'] == USER_FOUNDER ) ? true : 0;
+	break;
+}
 
 // ===================================================
 // if the module is disabled give them a nice message
@@ -177,6 +206,8 @@ $actions = array(
 // ===================================================
 // Lets Build the page
 // ===================================================
+$page_title = $mx_user->lang('KB_title');
+
 $mx_kb->module( $actions[$mode] );
 $mx_kb->modules[$actions[$mode]]->main( $mode );
 
@@ -203,7 +234,7 @@ if ( $print_version)
 	ob_start();
 }
 
-$template->pparse( 'body' );
+$template->pparse('body');
 
 if ( $print_version )
 {
@@ -219,4 +250,5 @@ if ( !$print_version )
 {
 	//$mx_kb_functions->page_footer();
 }
+
 ?>

@@ -59,8 +59,48 @@ define('KB_AUTH_APPROVAL_EDIT', 21);
  */
 class mx_kb_auth
 {
+	/** @var \orynider\pafiledb\core\functions */
+	protected $functions;
+	/** @var \phpbb\template\template */
+	protected $template;
+	/** @var \phpbb\user */
+	protected $user;	
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db; 
+	/** @var \phpbb\request\request */
+	protected $request; 	
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+	
 	var $auth_user = array();
+	var $auth_global = array();
+	
+	public function mx_pafiledb_auth()
+	{
+		global $mx_kb_functions, 
+		$template, 
+		$mx_user, 
+		$db,
+		$mx_request_vars,
+		$phpbb_auth;
+		
+		$this->functions 	= $mx_kb_functions;
+		$this->template 	= $template;
+		$this->user 		= $mx_user;
+		$this->db 			= $db;
+		$this->request 	= $mx_request_vars;
+		$this->auth 		= $phpbb_auth;
+		
+		$this->is_admin = ( $this->user->data['user_level'] == ADMIN && $this->user->data['session_logged_in'] ) ? true : 0;
+		$this->is_mod = ( $this->user->data['user_level'] == MOD && $this->user->data['session_logged_in'] ) ? true : 0;				
 
+		$this->auth_fields = array( 'auth_view', 'auth_read', 'auth_view_file', 'auth_edit_file', 'auth_delete_file', 'auth_upload', 'auth_download', 'auth_rate', 'auth_email', 'auth_view_comment', 'auth_post_comment', 'auth_edit_comment', 'auth_delete_comment', 'auth_approval', 'auth_approval_edit' );
+		$this->auth_fields_global = array( 'auth_search', 'auth_stats', 'auth_toplist', 'auth_viewall' );
+		
+		// Read out config values
+		$this->kb_config = $mx_kb_functions->config_values();
+	}
+	
 	/**
 	 * Enter description here...
 	 *
@@ -81,42 +121,42 @@ class mx_kb_auth
 				$a_sql_groups = 'a.auth_view_groups, a.auth_edit_groups, a.auth_delete_groups, a.auth_post_groups, a.auth_rate_groups, a.auth_view_comment_groups, a.auth_post_comment_groups, a.auth_edit_comment_groups, a.auth_delete_comment_groups, a.auth_approval_groups, a.auth_approval_edit_groups';
 				$auth_fields = array( 'auth_view', 'auth_edit', 'auth_delete', 'auth_post', 'auth_rate', 'auth_view_comment', 'auth_post_comment', 'auth_edit_comment', 'auth_delete_comment', 'auth_approval', 'auth_approval_edit' );
 				$auth_fields_groups = array( 'auth_view_groups', 'auth_edit_groups', 'auth_delete_groups', 'auth_post_groups', 'auth_rate_groups', 'auth_view_comment_groups', 'auth_post_comment_groups', 'auth_edit_comment_groups', 'auth_delete_comment_groups', 'auth_approval_groups', 'auth_approval_edit_groups' );
-				break;
+			break;
 
 			case KB_AUTH_VIEW:
 				$a_sql = 'a.auth_view';
 				$a_sql_groups = 'a.auth_view_groups';
 				$auth_fields = array( 'auth_view' );
 				$auth_fields_groups = array( 'auth_view_groups' );
-				break;
+			break;
 
 			case KB_AUTH_EDIT:
 				$a_sql = 'a.auth_edit';
 				$a_sql_groups = 'a.auth_edit_groups';
 				$auth_fields = array( 'auth_edit' );
 				$auth_fields_groups = array( 'auth_edit_groups' );
-				break;
+			break;
 
 			case KB_AUTH_DELETE:
 				$a_sql = 'a.auth_delete';
 				$a_sql_groups = 'a.auth_delete_groups';
 				$auth_fields = array( 'auth_delete' );
 				$auth_fields_groups = array( 'auth_delete_groups' );
-				break;
+			break;
 
 			case KB_AUTH_POST:
 				$a_sql = 'a.auth_post';
 				$a_sql_groups = 'a.auth_post_groups';
 				$auth_fields = array( 'auth_post' );
 				$auth_fields_groups = array( 'auth_post_groups' );
-				break;
+			break;
 
 			case KB_AUTH_RATE:
 				$a_sql = 'a.auth_rate';
 				$a_sql_groups = 'a.auth_rate_groups';
 				$auth_fields = array( 'auth_rate' );
 				$auth_fields_groups = array( 'auth_rate_groups' );
-				break;
+			break;
 
 			case KB_AUTH_VIEW_COMMENT:
 				$a_sql = 'a.auth_view_comment';
@@ -130,42 +170,42 @@ class mx_kb_auth
 				$a_sql_groups = 'a.auth_post_comment_groups';
 				$auth_fields = array( 'auth_post_comment' );
 				$auth_fields_groups = array( 'auth_post_comment_groups' );
-				break;
+			break;
 
 			case KB_AUTH_EDIT_COMMENT:
 				$a_sql = 'a.auth_edit_comment';
 				$a_sql_groups = 'a.auth_edit_comment_groups';
 				$auth_fields = array( 'auth_edit_comment' );
 				$auth_fields_groups = array( 'auth_edit_comment_groups' );
-				break;
+			break;
 
 			case KB_AUTH_DELETE_COMMENT:
 				$a_sql = 'a.auth_delete_comment';
 				$a_sql_groups = 'a.auth_delete_comment_groups';
 				$auth_fields = array( 'auth_delete_comment' );
 				$auth_fields_groups = array( 'auth_delete_comment_groups' );
-				break;
+			break;
 
 			case KB_AUTH_APPROVAL:
 				$a_sql = 'a.auth_approval';
 				$a_sql_groups = 'a.auth_approval_groups';
 				$auth_fields = array( 'auth_approval' );
 				$auth_fields_groups = array( 'auth_approval_groups' );
-				break;
+			break;
 
 			case KB_AUTH_APPROVAL_EDIT:
 				$a_sql = 'a.auth_approval_edit';
 				$a_sql_groups = 'a.auth_approval_edit_groups';
 				$auth_fields = array( 'auth_approval_edit' );
 				$auth_fields_groups = array( 'auth_approval_edit_groups' );
-				break;
+			break;
 
 			default:
-				break;
+			break;
 		}
-
+		
 		$is_admin = ( $userdata['user_level'] == ADMIN && $userdata['session_logged_in'] ) ? true : 0;
-
+		
 		//
 		// If f_access has not been passed, or auth is needed to return an array of forums
 		// then we need to pull the auth information on the given forum (or all forums)
@@ -215,36 +255,36 @@ class mx_kb_auth
 					case AUTH_ALL:
 						$this->auth_user[$key] = true;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Anonymous_users'];
-						break;
+					break;
 
 					case AUTH_REG:
 						$this->auth_user[$key] = ( $userdata['session_logged_in'] ) ? true : 0;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Registered_Users'];
-						break;
+					break;
 
 					case AUTH_ANONYMOUS:
 						$this->auth_user[$key] = ( ! $userdata['session_logged_in'] ) ? true : 0;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Anonymous_users'];
-						break;
+					break;
 
 					case AUTH_ACL: // PRIVATE
 						$this->auth_user[$key] = ( $userdata['session_logged_in'] ) ? mx_is_group_member( $value_groups ) || mx_is_group_member( $f_access['auth_moderator_groups'] ) || $is_admin : 0;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Users_granted_access'];
-						break;
+					break;
 
 					case AUTH_MOD:
 						$this->auth_user[$key] = ( $userdata['session_logged_in'] ) ? mx_is_group_member( $f_access['auth_moderator_groups'] ) || $is_admin : 0;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Moderators'];
-						break;
+					break;
 
 					case AUTH_ADMIN:
 						$this->auth_user[$key] = $is_admin;
 						$this->auth_user[$key . '_type'] = $lang['Auth_Administrators'];
-						break;
+					break;
 
 					default:
 						$this->auth_user[$key] = 0;
-						break;
+					break;
 				}
 
 				//
@@ -267,12 +307,12 @@ class mx_kb_auth
 						case AUTH_ALL:
 							$this->auth_user[$f_cat_id][$key] = true;
 							$this->auth_user[$f_cat_id][$key . '_type'] = $lang['Auth_Anonymous_users'];
-							break;
+						break;
 
 						case AUTH_REG:
 							$this->auth_user[$f_cat_id][$key] = ( $userdata['session_logged_in'] ) ? true : 0;
 							$this->auth_user[$f_cat_id][$key . '_type'] = $lang['Auth_Registered_Users'];
-							break;
+						break;
 
 						case AUTH_ANONYMOUS:
 							$this->auth_user[$f_cat_id][$key] = ( ! $userdata['session_logged_in'] ) ? true : 0;
@@ -282,21 +322,21 @@ class mx_kb_auth
 						case AUTH_ACL: // PRIVATE
 							$this->auth_user[$f_cat_id][$key] = ( $userdata['session_logged_in'] ) ? mx_is_group_member( $value_groups ) || mx_is_group_member( $f_access[$k]['auth_moderator_groups'] ) || $is_admin : 0;
 							$this->auth_user[$f_cat_id][$key . '_type'] = $lang['Auth_Users_granted_access'];
-							break;
+						break;
 
 						case AUTH_MOD:
 							$this->auth_user[$f_cat_id][$key] = ( $userdata['session_logged_in'] ) ? mx_is_group_member( $f_access[$k]['auth_moderator_groups'] ) || $is_admin : 0;
 							$this->auth_user[$f_cat_id][$key . '_type'] = $lang['Auth_Moderators'];
-							break;
+						break;
 
 						case AUTH_ADMIN:
 							$this->auth_user[$f_cat_id][$key] = $is_admin;
 							$this->auth_user[$f_cat_id][$key . '_type'] = $lang['Auth_Administrators'];
-							break;
+						break;
 
 						default:
 							$this->auth_user[$f_cat_id][$key] = 0;
-							break;
+						break;
 					}
 
 					//

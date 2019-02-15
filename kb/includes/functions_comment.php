@@ -25,11 +25,11 @@ class mx_kb_comments extends mx_comments
 	 * @param unknown_type $item_data
 	 * @param unknown_type $comments_type
 	 */
-	function init( $item_data, $comments_type = 'internal' )
+	function init($item_data, $comments_type = 'internal')
 	{
-		global $mx_kb, $kb_config, $db, $images;
+		global $mx_kb, $mx_user, $kb_config, $db, $images;
 
-		if ( !is_object($mx_kb) || empty($kb_config) )
+		if (!is_object($mx_kb) || empty($kb_config) )
 		{
 			mx_message_die(GENERAL_ERROR, 'Bad global arguments');
 		}
@@ -40,7 +40,7 @@ class mx_kb_comments extends mx_comments
 				FROM ' . KB_ARTICLES_TABLE . "
 				WHERE article_id = $item_data";
 
-			if ( !( $result = $db->sql_query( $sql ) ) )
+			if (!($result = $db->sql_query($sql)))
 			{
 				mx_message_die( GENERAL_ERROR, 'Couldn\'t get article info', '', __LINE__, __FILE__, $sql );
 			}
@@ -123,7 +123,7 @@ class mx_kb_comments extends mx_comments
 	 *
 	 * @param unknown_type $ranks
 	 */
-	function obtain_ranks( &$ranks )
+	function obtain_ranks( $ranks )
 	{
 		global $db, $mx_kb_cache;
 

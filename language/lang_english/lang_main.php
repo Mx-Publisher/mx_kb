@@ -111,6 +111,9 @@ $lang['Print_version'] = '[Printable version]';
 //
 // Stats
 //
+$lang['View_All'] = 'View All';
+$lang['Stats_Most_Popular'] = 'Stats Most Popular';
+$lang['Stats_Latest'] = 'Stats Latest';
 $lang['Top_toprated'] = 'Toprated Articles';
 $lang['Top_most_popular'] = 'Most Popular';
 $lang['Top_latest'] = 'Latest Articles';

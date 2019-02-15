@@ -24,7 +24,7 @@ class mx_kb_search extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $board_config, $phpEx, $kb_config, $db, $images;
 		global $phpbb_root_path, $userdata, $mx_root_path, $module_root_path, $is_block;

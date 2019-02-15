@@ -24,7 +24,7 @@ class mx_kb_mcp extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $db, $lang, $userdata, $board_config, $phpEx, $images, $debug;
 		global $mx_root_path, $phpbb_root_path, $module_root_path, $is_block;

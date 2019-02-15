@@ -47,17 +47,33 @@ class mx_kb extends mx_kb_auth
 	var $sort_order = '';
 
 	var $reader_mode = false;
+	/**
+	 * Prepare data.
+	 *
+	 */
+	function __construct()
+	{
+		global $db, $userdata, $mx_request_vars, $debug, $kb_config, $mx_root_path, $module_root_path, $phpEx;
 
+		$this->debug('mx_kb->__construct', basename( __FILE__ ));
+		$this->db = $db;
+		$this->request = $mx_request_vars;
+		$this->mx_root_path = $mx_root_path;
+		$this->module_root_path = $module_root_path;
+		$this->php_ext = $phpEx;
+		
+	}
+	
 	/**
 	 * Prepare data.
 	 *
 	 */
 	function init()
 	{
-		global $db, $userdata, $debug, $kb_config;
+		global $db, $userdata, $mx_request_vars, $debug, $kb_config, $mx_root_path, $module_root_path, $phpEx;
 
 		$this->debug('mx_kb->init', basename( __FILE__ ));
-
+		
 		unset( $this->cat_rowset );
 		unset( $this->subcat_rowset );
 		unset( $this->comments );
@@ -93,22 +109,27 @@ class mx_kb extends mx_kb_auth
 				//
 				$this->comments[$cat_rowset[$i]['category_id']]['activated'] = $cat_rowset[$i]['cat_allow_comments'] == -1 ? ($kb_config['use_comments'] == 1 ? true : false ) : ( $cat_rowset[$i]['cat_allow_comments'] == 1 ? true : false );
 
-				switch($portal_config['portal_backend'])
+				switch(PORTAL_BACKEND)
 				{
 					case 'internal':
 						$this->comments[$cat_rowset[$i]['category_id']]['internal_comments'] = true; // phpBB or internal comments
 						$this->comments[$cat_rowset[$i]['category_id']]['autogenerate_comments'] = false; // autocreate comments when updated
 						$this->comments[$cat_rowset[$i]['category_id']]['comments_forum_id'] = 0; // phpBB target forum (only used for phpBB comments)
-						break;
+					break;
 
 					default:
 						$this->comments[$cat_rowset[$i]['category_id']]['internal_comments'] = $cat_rowset[$i]['internal_comments'] == -1 ? ($kb_config['internal_comments'] == 1 ? true : false ) : ( $cat_rowset[$i]['internal_comments'] == 1 ? true : false ); // phpBB or internal comments
 						$this->comments[$cat_rowset[$i]['category_id']]['autogenerate_comments'] = $cat_rowset[$i]['autogenerate_comments'] == -1 ? ($kb_config['autogenerate_comments'] == 1 ? true : false ) : ( $cat_rowset[$i]['autogenerate_comments'] == 1 ? true : false ); // autocreate comments when updated
 						$this->comments[$cat_rowset[$i]['category_id']]['comments_forum_id'] = $cat_rowset[$i]['comments_forum_id'] < 1 ? ( intval($kb_config['comments_forum_id']) ) : ( intval($cat_rowset[$i]['comments_forum_id']) ); // phpBB target forum (only used for phpBB comments)
-						break;
+					break;
 				}
 
 				if ($this->comments[$cat_rowset[$i]['category_id']]['activated'] && !$this->comments[$cat_rowset[$i]['category_id']]['internal_comments'] && intval($this->comments[$cat_rowset[$i]['category_id']]['comments_forum_id']) < 1)
+				{
+					$this->comments[$cat_rowset[$i]['cat_id']]['internal_comments'] = true; // autocreate comments when updated
+				}
+				
+				if ($this->comments[$cat_rowset[$i]['cat_id']]['activated'] && !$this->comments[$cat_rowset[$i]['cat_id']]['internal_comments'] && intval($this->comments[$cat_rowset[$i]['cat_id']]['comments_forum_id']) < 1)
 				{
 				 	mx_message_die(GENERAL_ERROR, 'Init Failure, phpBB comments with no target forum_id :(<br> Category: ' . $cat_rowset[$i]['category_name'] . ' Forum_id: ' . $this->comments[$cat_rowset[$i]['category_id']]['comments_forum_id']);
 				}
@@ -138,27 +159,27 @@ class mx_kb extends mx_kb_auth
 			case 'Id':
 				$this->sort_method = 't.article_id';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 			case 'Latest':
 				$this->sort_method = 't.article_date';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 			case 'Toprated':
 				$this->sort_method = 'rating';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 			case 'Most_popular':
 				$this->sort_method = 't.views';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 			case 'Userrank':
 				$this->sort_method = 'u.user_rank';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 			case 'Alphabetic':
 				$this->sort_method = 't.article_title';
 				$this->sort_method_extra = 't.article_type' . " DESC, " ;
-				break;
+			break;
 		}
 
 		$this->reader_mode = $kb_config['reader_mode'];
@@ -237,14 +258,14 @@ class mx_kb extends mx_kb_auth
 	 * @param unknown_type $cat_id
 	 * @param unknown_type $init
 	 */
-	function sync( $cat_id, $init = true )
+	function sync($cat_id, $init = true)
 	{
 		global $db;
 
 		$this->debug('mx_kb->sync', basename( __FILE__ ));
 
 		$cat_nav = array();
-		$this->category_nav( $this->cat_rowset[$cat_id]['parent'], &$cat_nav );
+		$this->category_nav( $this->cat_rowset[$cat_id]['parent'], $cat_nav );
 
 		$sql = 'UPDATE ' . KB_CATEGORIES_TABLE . "
 			SET parents_data = ''
@@ -272,18 +293,120 @@ class mx_kb extends mx_kb_auth
 		}
 		return;
 	}
+	
+	/**
+	 * Dummy function
+	 */
+	function message_die($msg_code, $msg_text = '', $msg_title = '', $err_line = '', $err_file = '', $sql = '')
+	{		
+		//
+		// Get SQL error if we are debugging. Do this as soon as possible to prevent
+		// subsequent queries from overwriting the status of sql_error()
+		//
+		if (DEBUG && ($msg_code == GENERAL_ERROR || $msg_code == CRITICAL_ERROR))
+		{
+				
+			if ( isset($sql) )
+			{
+				//$sql_error = array(@print_r(@$this->db->sql_error($sql)));				
+				$sql_error['message'] = $sql_error['message'] ? $sql_error['message'] : '<br /><br />SQL : ' . $sql; 
+				$sql_error['code'] = $sql_error['code'] ? $sql_error['code'] : 0;			
+			}
+			else
+			{
+				$sql_error = array(@print_r(@$this->db->sql_error_returned));				
+				$sql_error['message'] = $sql_error['message'] ? $sql_error['message'] : '<br /><br />SQL : ' . $sql; 
+				$sql_error['code'] = $sql_error['code'] ? $sql_error['code'] : 0;					
+			}			
+			
+			$debug_text = '';
 
+			if ( isset($sql_error['message']) )
+			{
+				$debug_text .= '<br /><br />SQL Error : ' . $sql_error['code'] . ' ' . $sql_error['message'];
+			}
+
+			if ( isset($sql_store) )
+			{
+				$debug_text .= "<br /><br />$sql_store";
+			}
+
+			if ( isset($err_line) && isset($err_file) )
+			{
+				$debug_text .= '</br /><br />Line : ' . $err_line . '<br />File : ' . $err_file;
+			}
+		}		
+		
+		switch($msg_code)
+		{
+			case GENERAL_MESSAGE:
+				if ( $msg_title == '' )
+				{
+					$msg_title = $this->user->lang('Information');
+				}
+			break;
+
+			case CRITICAL_MESSAGE:
+				if ( $msg_title == '' )
+				{
+					$msg_title = $this->user->lang('Critical_Information');
+				}
+			break;
+
+			case GENERAL_ERROR:
+				if ( $msg_text == '' )
+				{
+					$msg_text = $this->user->lang('An_error_occured');
+				}
+
+				if ( $msg_title == '' )
+				{
+					$msg_title = $this->user->lang('General_Error');
+				}
+			break;
+
+			case CRITICAL_ERROR:
+
+				if ($msg_text == '')
+				{
+					$msg_text = $this->user->lang('A_critical_error');
+				}
+
+				if ($msg_title == '')
+				{
+					$msg_title = 'phpBB : <b>' . $this->user->lang('Critical_Error') . '</b>';
+				}
+			break;
+		}
+		
+		//
+		// Add on DEBUG info if we've enabled debug mode and this is an error. This
+		// prevents debug info being output for general messages should DEBUG be
+		// set TRUE by accident (preventing confusion for the end user!)
+		//
+		if ( DEBUG && ( $msg_code == GENERAL_ERROR || $msg_code == CRITICAL_ERROR ) )
+		{
+			if ( $debug_text != '' )
+			{
+				$msg_text = $msg_text . '<br /><br /><b><u>DEBUG MODE</u></b> ' . $debug_text;
+			}
+		}		
+		
+		trigger_error($msg_title . ': ' . $msg_text);
+	}  
+	
+	
 	/**
 	 * Enter description here...
 	 *
 	 * @param unknown_type $parent_id
 	 * @param unknown_type $cat_nav
 	 */
-	function category_nav( $parent_id, &$cat_nav )
+	function category_nav( $parent_id, $cat_nav )
 	{
 		if ( !empty( $this->cat_rowset[$parent_id] ) )
 		{
-			$this->category_nav( $this->cat_rowset[$parent_id]['parent'], &$cat_nav );
+			$this->category_nav( $this->cat_rowset[$parent_id]['parent'], $cat_nav );
 			$cat_nav[$parent_id] = $this->cat_rowset[$parent_id]['category_name'];
 		}
 		return;
@@ -529,7 +652,7 @@ class mx_kb extends mx_kb_auth
 		global $db, $kb_config, $template, $board_config;
 		global $images, $lang, $theme, $phpEx, $mx_kb_functions;
 		global $phpbb_root_path, $mx_root_path, $module_root_path, $is_block, $phpEx;
-		global $article_path;
+		global $article_path, $phpBB2;
 
 		$filelist = false;
 
@@ -565,7 +688,7 @@ class mx_kb extends mx_kb_auth
 				break;
 
 			default:
-				$sql = "SELECT t.*, t.article_id, r.votes_article, IF(COUNT(r.rate_point)>0,AVG(r.rate_point),0) AS rating, COUNT(r.votes_article) AS total_votes, u.user_id, u.username, typ.type
+				$sql = "SELECT t.*, t.article_id, r.votes_article, IF(COUNT(r.rate_point) > 0, AVG(r.rate_point), 0) AS rating, COUNT(r.votes_article) AS total_votes, u.user_id, u.username, typ.type
 					FROM " . KB_ARTICLES_TABLE . " AS t
 						LEFT JOIN " . KB_VOTES_TABLE . " AS r ON t.article_id = r.votes_article
 						LEFT JOIN " . KB_TYPES_TABLE . " AS typ ON t.article_type = typ.id
@@ -579,7 +702,8 @@ class mx_kb extends mx_kb_auth
 				break;
 		}
 
-		if ( !( $result = $mx_kb_functions->sql_query_limit( $sql, $kb_config['pagination'], $start ) ) )
+		//if ( !( $result = $mx_kb_functions->sql_query_limit( $sql, $kb_config['pagination'], $start ) ) )
+		if (!( $result = $db->sql_query_limit($sql, $kb_config['pagination'], $start)))
 		{
 			mx_message_die( GENERAL_ERROR, 'Couldn\'t get article info for this category', '', __LINE__, __FILE__, $sql );
 		}
@@ -608,7 +732,7 @@ class mx_kb extends mx_kb_auth
 			// ===================================================
 			// Format the date for the given file
 			// ===================================================
-			//$article_date = phpBB2::create_date( $board_config['default_dateformat'], $file_rowset[$i]['article_date'], $board_config['board_timezone'] );
+			//$article_date = $phpBB2->create_date( $board_config['default_dateformat'], $file_rowset[$i]['article_date'], $board_config['board_timezone'] );
 
 			//
 			// If the file is new then put a new image in front of it
@@ -634,7 +758,7 @@ class mx_kb extends mx_kb_auth
 			//
 			// author information
 			//
-			$author = ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . mx_append_sid( $phpbb_root_path . 'profile.' . $phpEx . '?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $file_rowset[$i]['user_id'] ) . '" target=_blank>' : '';
+			$author = ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . mx_append_sid( $phpbb_root_path . ((PORTAL_BACKEND == 'internal') && (PORTAL_BACKEND == 'phpbb2') ? 'profile.' : 'ucp.') . $phpEx . '?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $file_rowset[$i]['user_id'] ) . '" target=_blank>' : '';
 			$author .= ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? $file_rowset[$i]['username'] : $file_rowset[$i]['post_username'] . '(' . $lang['Guest'] . ')';
 			$author .= ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
@@ -751,7 +875,7 @@ class mx_kb extends mx_kb_auth
 		if ( $this->cat_rowset[$cat_id]['parents_data'] == '' )
 		{
 			$cat_nav = array();
-			$this->category_nav( $this->cat_rowset[$cat_id]['parent'], &$cat_nav );
+			$this->category_nav( $this->cat_rowset[$cat_id]['parent'], $cat_nav = array() );
 
 			$sql = 'UPDATE ' . KB_CATEGORIES_TABLE . "
 				SET parents_data = '" . addslashes( serialize( $cat_nav ) ) . "'
@@ -816,7 +940,7 @@ class mx_kb extends mx_kb_auth
 	 * @param unknown_type $cat_id
 	 * @param unknown_type $file_info
 	 */
-	function last_item_in_cat( $cat_id, &$file_info )
+	function last_item_in_cat($cat_id, $file_info = array())
 	{
 		if ( ( empty( $this->cat_rowset[$cat_id]['cat_last_article_id'] ) && empty( $this->cat_rowset[$cat_id]['cat_last_article_name'] ) && empty( $this->cat_rowset[$cat_id]['cat_last_article_time'] ) ) || $this->modified )
 		{
@@ -825,10 +949,10 @@ class mx_kb extends mx_kb_auth
 			$sql = 'SELECT article_date, article_id, article_title, article_category_id
 				FROM ' . KB_ARTICLES_TABLE . "
 				WHERE approved = '1'
-				AND article_category_id IN (" . $this->gen_cat_ids( $cat_id ) . ")
+				AND article_category_id IN (" . $this->gen_cat_ids($cat_id) . ")
 				ORDER BY article_date DESC";
 
-			if ( !( $result = $db->sql_query( $sql, 300 ) ) )
+			if ( !( $result = $db->sql_query($sql) ) )
 			{
 				mx_message_die( GENERAL_ERROR, 'Couldnt Query links info', '', __LINE__, __FILE__, $sql );
 			}
@@ -894,7 +1018,7 @@ class mx_kb extends mx_kb_auth
 	 */
 	function display_categories( $parent = 0 )
 	{
-		global $db, $template, $board_config, $lang, $phpbb_root_path, $mx_root_path, $module_root_path, $phpEx, $is_block, $page_id, $kb_config, $userdata, $images, $kb_quick_nav;
+		global $db, $template, $board_config, $lang, $phpBB2, $phpbb_root_path, $mx_root_path, $module_root_path, $phpEx, $is_block, $page_id, $kb_config, $userdata, $images, $kb_quick_nav;
 
 		$this->debug('mx_kb->display_categories', basename( __FILE__ ));
 
@@ -956,7 +1080,7 @@ class mx_kb extends mx_kb_auth
 					$category_details = $category['category_details'];
 
 					$category_name = $category['category_name'];
-					$category_url = mx_append_sid( $this->this_mxurl( "mode=cat&amp;cat=$category_id" ) );
+					$category_url = mx_append_sid( $this->this_mxurl( "mode=cat&cat=$category_id" ) );
 
 					$num_of_cats++;
 
@@ -965,7 +1089,7 @@ class mx_kb extends mx_kb_auth
 
 					if ( !empty( $last_file_info['article_id'] ) && $this->auth_user[$category_id]['auth_view'] )
 					{
-						$last_file_time = phpBB2::create_date( $board_config['default_dateformat'], $last_file_info['article_date'], $board_config['board_timezone'] );
+						$last_file_time = $phpBB2->create_date( $board_config['default_dateformat'], $last_file_info['article_date'], $board_config['board_timezone'] );
 						$last_file = $last_file_time . '<br />';
 						$last_file_name = ( strlen( stripslashes( $last_file_info['article_title'] ) ) > 20 ) ? substr( stripslashes( $last_file_info['article_title'] ), 0, 20 ) . '...' : stripslashes( $last_file_info['article_title'] );
 						$last_file .= '<a href="' . mx_append_sid( $this->this_mxurl( 'mode=article&k=' . $last_file_info['article_id'] ) ) . '" alt="' . stripslashes( $last_file_info['article_title'] ) . '" title="' . stripslashes( $last_file_info['article_title'] ) . '">' . $last_file_name . '</a> ';
@@ -1023,7 +1147,7 @@ class mx_kb extends mx_kb_auth
 	function display_items( $start, $cat_id = false, $sort_options_list = false, $sql_xtra = '', $target_page_id = false )
 	{
 		global $db, $kb_config, $template, $board_config, $mx_block;
-		global $images, $lang, $theme, $phpEx, $mx_kb_functions;
+		global $images, $lang, $theme, $phpEx, $mx_kb_functions, $phpBB2;
 		global $phpbb_root_path, $mx_root_path, $module_root_path, $is_block, $phpEx;
 
 		$filelist = false;
@@ -1062,7 +1186,7 @@ class mx_kb extends mx_kb_auth
 					$sql_xtra
 					GROUP BY t.article_id
 					ORDER BY " . $this->sort_method_extra . $this->sort_method . " " . $this->sort_order;
-				break;
+			break;
 
 			default:
 				$sql = "SELECT t.*, t.article_id, r.votes_article, IF(COUNT(r.rate_point)>0,AVG(r.rate_point),0) AS rating, COUNT(r.votes_article) AS total_votes, u.user_id, u.username, typ.type
@@ -1076,12 +1200,13 @@ class mx_kb extends mx_kb_auth
 					$sql_xtra
 					GROUP BY t.article_id
 					ORDER BY " . $this->sort_method_extra . $this->sort_method . " " . $this->sort_order;
-				break;
+			break;
 		}
-
-		if ( !( $result = $mx_kb_functions->sql_query_limit( $sql, $kb_config['pagination'], $start ) ) )
+		
+		//if ( !( $result = $mx_kb_functions->sql_query_limit( $sql, $kb_config['pagination'], $start ) ) )
+		if (!($result = $db->sql_query_limit($sql, $kb_config['pagination'], $start)))
 		{
-			mx_message_die( GENERAL_ERROR, 'Couldn\'t get article info for this category', '', __LINE__, __FILE__, $sql );
+			mx_message_die(GENERAL_ERROR, "Couldn't get article info for this category. Were sort_method=" . $this->sort_method . ". Were sort_order=" . $this->sort_order . ".", "", __LINE__, __FILE__, $sql );
 		}
 
 		$file_rowset = array();
@@ -1139,7 +1264,7 @@ class mx_kb extends mx_kb_auth
 			// ===================================================
 			// Format the date for the given file
 			// ===================================================
-			$article_date = phpBB2::create_date( $board_config['default_dateformat'], $file_rowset[$i]['article_date'], $board_config['board_timezone'] );
+			$article_date = $phpBB2->create_date( $board_config['default_dateformat'], $file_rowset[$i]['article_date'], $board_config['board_timezone'] );
 			// ===================================================
 			// Get rating for the file and format it
 			// ===================================================
@@ -1168,7 +1293,7 @@ class mx_kb extends mx_kb_auth
 			//
 			// author information
 			//
-			$author = ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . mx_append_sid( $phpbb_root_path . 'profile.' . $phpEx . '?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $file_rowset[$i]['user_id'] ) . '" target=_blank>' : '';
+			$author = ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . mx_append_sid($phpbb_root_path . ((PORTAL_BACKEND == 'internal') && (PORTAL_BACKEND == 'phpbb2') ? 'profile.' : 'ucp.') . $phpEx . '?mode=viewprofile&' . POST_USERS_URL . '=' . $file_rowset[$i]['user_id'] ) . '" target=_blank>' : '';
 			$author .= ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? $file_rowset[$i]['username'] : $file_rowset[$i]['post_username'] . '(' . $lang['Guest'] . ')';
 			$author .= ( $file_rowset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
@@ -1180,7 +1305,7 @@ class mx_kb extends mx_kb_auth
 			//
 			// Article Url - Standard or App
 			//
-			$article_url = mx_append_sid( $this->this_mxurl( "mode=article&amp;k=$article_id", false, false, $target_page_id ) );
+			$article_url = mx_append_sid( $this->this_mxurl( "mode=article&k=$article_id", false, false, $target_page_id ) );
 
 			// ===================================================
 			// Assign Vars
@@ -1197,7 +1322,7 @@ class mx_kb extends mx_kb_auth
 
 				'ARTICLE_VOTES' => $file_rowset[$i]['total_votes'],
 				'L_RATING' => $lang['Votes_label'],
-				'DO_RATE' => $this->auth_user[$cat_id]['auth_rate'] ? '<a href="' . mx_append_sid( $this->this_mxurl( 'mode=rate&amp;k=' . $file_rowset[$i]['article_id'] ) ) . '">' . $lang['ADD_RATING'] . '</a>' : '',
+				'DO_RATE' => $this->auth_user[$cat_id]['auth_rate'] ? '<a href="' . mx_append_sid( $this->this_mxurl( 'mode=rate&k=' . $file_rowset[$i]['article_id'] ) ) . '">' . $lang['ADD_RATING'] . '</a>' : '',
 				'RATING' => $rating,
 
 				'U_ARTICLE' => $article_url,
@@ -1234,16 +1359,16 @@ class mx_kb extends mx_kb_auth
 					{
 						case 'date':
 							$template->assign_block_vars( "ARTICLELIST.articlerow.display_date", array());
-							break;
+						break;
 						case 'username':
 							$template->assign_block_vars( "ARTICLELIST.articlerow.display_username", array());
-							break;
+						break;
 						case 'counter':
 							$template->assign_block_vars( "ARTICLELIST.articlerow.display_counter", array());
-							break;
+						break;
 						case 'rate':
 							$template->assign_block_vars( "ARTICLELIST.articlerow.display_rate", array());
-							break;
+						break;
 					}
 				}
 			}
@@ -1300,12 +1425,12 @@ class mx_kb extends mx_kb_auth
 				'SORT_ASC' => ( $sort_order == 'ASC' ) ? 'selected="selected"' : '',
 				'SORT_DESC' => ( $sort_order == 'DESC' ) ? 'selected="selected"' : '',
 
-				'PAGINATION' => phpBB2::generate_pagination( mx_append_sid( $this->this_mxurl( "mode=$action&amp;sort_method=$sort_method&amp;sort_order=$sort_order" ) ), $total_file, $kb_config['pagination'], $start ),
+				'PAGINATION' => mx_generate_pagination( mx_append_sid( $this->this_mxurl( "&mode=$action&amp;sort_method=$sort_method&sort_order=$sort_order" ) ), $total_file, $kb_config['pagination'], $start),
 				'PAGE_NUMBER' => sprintf( $lang['Page_of'], ( floor( $start / $kb_config['pagination'] ) + 1 ), ceil( $total_file / $kb_config['pagination'] ) ),
 				'ID' => $cat_id,
 				'START' => $start,
 
-				'S_ACTION_SORT' => mx_append_sid( $this->this_mxurl( "mode=$action" ) ) )
+				'S_ACTION_SORT' => mx_append_sid( $this->this_mxurl( "&mode=$action" ) ) )
 			);
 		}
 		else
@@ -1351,42 +1476,103 @@ class mx_kb extends mx_kb_auth
 	}
 
 	/**
-	 * url rewrites.
+	 * MX URL Fix
+	 * Temporary solution to handle addons urls 
 	 *
 	 * @param unknown_type $args
 	 * @param unknown_type $force_standalone_mode
 	 * @param unknown_type $non_html_amp
 	 * @return unknown
 	 */
-	function this_mxurl( $args = '', $force_standalone_mode = false, $non_html_amp = false, $pageId = '' )
+	function this_mxurl($args = '', $force_standalone_mode = false, $non_html_amp = false, $is_block = true)
 	{
 		global $mx_root_path, $module_root_path, $page_id, $phpEx, $is_block;
-
-		$pageId = empty($pageId) ? $page_id : $pageId;
+		
+		$pageId 		= $this->request->variable('page_id', $page_id);
+		$dynamicId 		= isset($_GET['dynamic_block']) ? ( $non_html_amp ? '&dynamic_block=' : '&amp;dynamic_block=' ) . $this->request->variable('dynamic_block') : '';
+		
+		$args = str_replace('&amp;', '&', $args);
+		
+		$actions_args 	= isset($args) ? @explode('&', str_replace('?', '&', $args)) : '';
+		
+		$action_arg1st 	= isset($actions_args[0]) ? @explode('=', $actions_args[0]) : '';
+		$action_arg2nd 	= isset($actions_args[1]) ? @explode('=', $actions_args[1]) : '';
+		$action_arg3rd 	= isset($actions_args[2]) ? @explode('=', $actions_args[2]) : '';
+		
+		$mode 		= ($action_arg1st[0] == 'mode') ? $action_arg1st[1] : $this->request->variable('mode', '');
+		$action 		= ($action_arg1st[0] == 'action') ? $action_arg1st[1] : $this->request->variable('action', $mode);
+		
+		$do 			= ($action_arg1st[0] == 'do') ? $action_arg1st[1] : $this->request->variable('do', '');	
+		$do 			= ($action_arg2nd[0] == 'do') ? $action_arg2nd[1] : $this->request->variable('do', $do);
+		$do 			= ($action_arg3rd[0] == 'do') ? $action_arg3rd[1] : $this->request->variable('do', $do);
+			
+		$article_id 		= ($action_arg2nd[0] == 'article_id') ? $action_arg2nd[1] : $this->request->variable('article_id', '');
+		$article_id 		= ($action_arg3rd[0] == 'article_id') ? $action_arg3rd[1] : $article_id;		
+		
+		$cat_id 		= ($action_arg2nd[0] == 'cat_id') ? $action_arg2nd[1] : $this->request->variable('cat_id', '');		
+		$cat_id 		= ($action_arg3rd[0] == 'cat_id') ? $action_arg3rd[1] : $cat_id;				
+		
+	
+		if ( ($cat_id == 0) && ($article_id !== 0) )
+		{
+			$sql = "SELECT article_id
+				FROM " . KB_ARTICLES_TABLE . "
+				WHERE article_id = '" . $article_id . "'";
+			if ( !( $result = $this->db->sql_query( $sql ) ) )
+			{
+				$this->message_die( GENERAL_ERROR, 'Couldnt query download file category', '', __LINE__, __FILE__, $sql );
+			}
+			$article_data = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+			
+			$cat_id = $article_data['article_category_id'];
+		}
+		
+		
+		$use_action = isset($action) ? '_' . str_replace('category', 'cat', $action) : '';
+		
+		$use_cat_or_file_array = ((isset($cat_id) && !isset($article_id)) || (!isset($cat_id) && isset($article_id))) ? true : false;					
+		$use_cat_and_file_array = isset($cat_id) && isset($article_id) ? true : false;
+		
+		$use_cat_array = ($use_cat_file_array == false) && isset($cat_id) ? true : false;	
+		$use_action_do_array = isset($action) && isset($do) ? true : false;
+		
+		$route_cat_or_file_array = (($use_cat_or_file_array == true) && ($use_cat_array == true)) ? array('cat_id' => $cat_id) : ( (($use_cat_or_file_array == true) && ($use_file_array == true )) ? array('file_id' => $file_id) : array('mode' => $mode) );
+		$route_cat_and_file_array = ($use_cat_and_file_array == true) ? array('cat_id' => $cat_id, 'article_id' => $article_id) : $route_cat_or_file_array;	
+		
+		$route_action_do_file_array = (($use_action_do_array == true) && ($use_file_array == true)) ? array('action' => $action, 'do' => $do, 'file_id' => $file_id) : ((($use_action_do_array == true) && ($use_cat_array == true)) ? array('mode' => $mode, 'do' => $do, 'file_id' => $file_id) : $route_cat_and_file_array);
+		
+		$route_array = ($use_action_do_array == true && is_array($route_action_do_file_array)) ? $route_action_do_file_array : $route_cat_and_file_array;		
+		
+		
+		$this->backend = PORTAL_BACKEND;
+		
 		$dynamicId = !empty($_GET['dynamic_block']) ? ( $non_html_amp ? '&dynamic_block=' : '&amp;dynamic_block=' ) . $_GET['dynamic_block'] : '';
 
 		$args .= ($args == '' ? '' : '&' ) . 'modrewrite=no';
-
+		
+		
 		if ( !MXBB_MODULE )
 		{
-			$mxurl = $module_root_path . 'kb.' . $phpEx . ( $args == '' ? '' : '?' . $args );
+			$mxurl = PORTAL_URL . $module_root_path . 'kb.' . $phpEx . ( $args == '' ? '' : '?' . $args );
 			return $mxurl;
 		}
 
 		if ( $force_standalone_mode || !$is_block )
 		{
-			$mxurl = $mx_root_path . 'modules/mx_kb/kb.' . $phpEx . ( $args == '' ? '' : '?' . $args );
+			$mxurl = PORTAL_URL . $module_root_path . 'kb.' . $phpEx . ( $args == '' ? '' : '?' . $args );
 		}
 		else
 		{
-			$mxurl = $mx_root_path . 'index.' . $phpEx;
+			$mxurl = PORTAL_URL . 'index.' . $phpEx;
+			
 			if ( is_numeric( $pageId ) )
 			{
-					$mxurl .= '?page=' . $pageId . $dynamicId . ( $args == '' ? '' : ( $non_html_amp ? '&' : '&amp;' ) . $args );
+				$mxurl .= '?page=' . $pageId . $dynamicId . ( $args == '' ? ( $non_html_amp ? '&' : '&amp;' ) . 'mode=' . $mode : ( $non_html_amp ? '&' : '&amp;' ) . $args );
 			}
 			else
 			{
-				$mxurl .= ( $args == '' ? '' : '?' . $args );
+				$mxurl .= ( $args == '' ? ( $non_html_amp ? '&' : '&amp;' ) . 'mode=' . $mode : ( $non_html_amp ? '&' : '&amp;' ) . $args );
 			}
 		}
 		return $mxurl;
@@ -1641,15 +1827,16 @@ class mx_kb extends mx_kb_auth
 	}
 
 	/**
-	 * update_add_item.
+	 * Enter description here...
 	 *
-	 * Not implemented for kb
-	 *
+	 * @param unknown_type $file_id
+	 * @return unknown
 	 */
-	function update_add_item()
+	function update_add_item( $file_id = false )
 	{
-
+		mx_message_die(GENERAL_ERROR, "Use mode=add or mode=edit to post or edit articles.");
 	}
+
 
 	/**
 	 * Enter description here...
@@ -2066,22 +2253,22 @@ class mx_kb_public extends mx_kb
 	var $module_name = '';
 
 	/**
-	 * load module
+	 * load module.
 	 *
 	 * @param unknown_type $module_name send module name to load it
 	 */
-	function module( $module_name )
+	function module($module_name)
 	{
-		if ( !class_exists( 'mx_kb_' . $module_name ) )
+		if (!class_exists('mx_kb_' . $module_name))
 		{
 			global $module_root_path, $phpEx;
 
 			$this->module_name = $module_name;
 
-			require_once( $module_root_path . 'kb/modules/kb_' . $module_name . '.' . $phpEx );
-			eval( '$this->modules[' . $module_name . '] = new mx_kb_' . $module_name . '();' );
+			require_once( $module_root_path . 'kb/modules/kb_' . $module_name . '.' . $phpEx);
+			@eval('$this->modules[' . $module_name . '] = new mx_kb_' . $module_name . '();' );
 
-			if ( method_exists( $this->modules[$module_name], 'init' ) )
+			if (method_exists($this->modules[$module_name], 'init'))
 			{
 				$this->modules[$module_name]->init();
 			}
@@ -2094,7 +2281,7 @@ class mx_kb_public extends mx_kb
 	 * @param unknown_type $module_id
 	 * @return unknown
 	 */
-	function main( $module_id = false )
+	function main($module_id = false)
 	{
 		return false;
 	}

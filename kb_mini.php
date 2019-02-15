@@ -83,7 +83,7 @@ if ( $action != 'download' )
 }
 
 $mx_kb->module( $actions[$action] );
-$mx_kb->modules[$actions[$action]]->main( $action );
+$mx_kb->modules[$actions[$action]]->main($action = false);
 
 $template->pparse( 'body' );
 

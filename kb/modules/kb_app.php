@@ -15,7 +15,7 @@ if( !defined('IN_PORTAL') )
 
 class mx_kb_app extends mx_kb_public
 {
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $db, $theme, $board_config, $phpEx, $kb_config, $debug, $mx_root_path, $module_root_path;
 		global $mx_page, $mx_block, $mx_request_vars, $article_path;

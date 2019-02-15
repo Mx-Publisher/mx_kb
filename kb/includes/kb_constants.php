@@ -13,7 +13,7 @@ if( !defined('IN_PORTAL') )
 	die("Hacking attempt");
 }
 
-if ( !MXBB_MODULE )
+if (!MXBB_MODULE)
 {
 	$server_protocol = ($board_config['cookie_secure']) ? 'https://' : 'http://';
 	$server_name = preg_replace('#^\/?(.*?)\/?$#', '\1', trim($board_config['server_name']));
@@ -26,15 +26,28 @@ if ( !MXBB_MODULE )
 
 	$kb_config['news_operate_mode'] = false;
 	$mx_table_prefix = $table_prefix;
-	$is_block = false;
+	$is_block = false; // This also makes the script work for phpBB ;)
 }
 
+if (!isset($mx_table_prefix))
+{
+	$mx_table_prefix = $table_prefix;
+}
+
+//$module_root_path = PORTAL_URL . $module_root_path;
+//die("$module_root_path");
 // -------------------------------------------------------------------------
 // This file defines specific constants for the module
 // -------------------------------------------------------------------------
 define('PAGE_KB_DEFAULT', -42);
+
 define('PAGE_KB', -42); // If this id generates a conflict with other mods, change it ;);
 
+
+//define('PAGE_KB_DEFAULT', PAGE_ARTICLES);
+define('ICONS_DIR', 'pafiledb/images/icons/');
+
+// Tables
 define( 'KB_ARTICLES_TABLE', $mx_table_prefix . 'kb_articles' );
 define( 'KB_CATEGORIES_TABLE', $mx_table_prefix . 'kb_categories' );
 define( 'KB_CONFIG_TABLE', $mx_table_prefix . 'kb_config' );
@@ -46,6 +59,8 @@ define( 'KB_VOTES_TABLE', $mx_table_prefix . 'kb_votes' );
 define( 'KB_COMMENTS_TABLE', $mx_table_prefix . 'kb_comments' );
 define( 'KB_CUSTOM_TABLE', $mx_table_prefix . 'kb_custom' );
 define( 'KB_CUSTOM_DATA_TABLE', $mx_table_prefix . 'kb_customdata' );
+// Switches
+define('KB_DEBUG', 1); // Module Debugging on
 
 // -------------------------------------------------------------------------
 // Field Types
@@ -56,6 +71,9 @@ define( 'RADIO', 2 );
 define( 'SELECT', 3 );
 define( 'SELECT_MULTIPLE', 4 );
 define( 'CHECKBOX', 5 );
+
+
+@define('RANKS_PATH', 'images/ranks');
 
 // -------------------------------------------------------------------------
 // Footer Copyrights
@@ -82,12 +100,44 @@ else
 		// - LANG: MX_LANG_MAIN (default), MX_LANG_ADMIN, MX_LANG_ALL, MX_LANG_NONE
 		// - IMAGES: MX_IMAGES (default), MX_IMAGES_NONE
 		// -------------------------------------------------------------------------
-		if (!$_GET['print']) // Do not "fix" with request wrapper!!
+		
+		// **********************************************************************
+		// First include shared phpBB2 language file 
+		// **********************************************************************
+		$mx_user->set_lang($mx_user->lang, $mx_user->help, 'lang_main');
+		
+		if (defined('IN_ADMIN'))
 		{
-			$mx_user->extend();
+			$mx_user->set_lang($mx_user->lang, $mx_user->help, 'lang_admin');
 		}
+		
+		if (defined('IN_ADMIN'))
+		{
+			$mx_user->extend(MX_LANG_ALL, MX_IMAGES_NONE, $module_root_path, true);
+		}
+		else
+		{
+			if (!$_GET['print']) // Do not "fix" with request wrapper!!
+			{			
+				$mx_user->extend(MX_LANG_MAIN, MX_IMAGES, $module_root_path, true);
+			}
+		}
+		$mx_page->add_copyright('MXP Knowledge Base Module');
+	}
+}
 
-		$mx_page->add_copyright( 'MXP Knowledge Base Module' );
+// **********************************************************************
+// If phpBB mod read language definition
+// **********************************************************************
+if ( !MXBB_MODULE )
+{
+	if ( !file_exists( $module_root_path . 'pafiledb/language/lang_' . $board_config['default_lang'] . '/lang_main.' . $phpEx ) )
+	{
+		include( $module_root_path . 'pafiledb/language/lang_english/lang_main.' . $phpEx );
+	}
+	else
+	{
+		include( $module_root_path . 'pafiledb/language/lang_' . $board_config['default_lang'] . '/lang_main.' . $phpEx );
 	}
 }
 ?>

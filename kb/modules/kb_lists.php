@@ -24,7 +24,7 @@ class mx_kb_lists extends mx_kb_public
 	 *
 	 * @param unknown_type $action
 	 */
-	function main( $action )
+	function main($action = false)
 	{
 		global $template, $lang, $phpEx, $kb_config, $userdata;
 		global $mx_root_path, $module_root_path, $is_block, $mx_request_vars;

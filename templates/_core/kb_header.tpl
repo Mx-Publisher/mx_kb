@@ -9,9 +9,9 @@
 			  	<tr>
 					<td align="center" class="row1">
 						<span class="gen">&nbsp;<a href="{U_SEARCH}" class="gen">{L_SEARCH}</a>&nbsp;
-						<!-- BEGIN switch_add_article -->
+						<!-- IF U_ADD_ARTICLE -->
 							&bull;&nbsp;<a href="{U_ADD_ARTICLE}" class="gen"><b>{L_ADD_ARTICLE}</b></a>&nbsp;
-						<!-- END switch_add_article -->
+						<!-- ENDIF -->
 						<!-- BEGIN MCP -->
 						&bull;&nbsp;<a href="{U_MCP}" class="gen"><b>{L_MCP}</b></a>&nbsp;
 						<!-- END MCP -->

@@ -28,7 +28,7 @@ if ( @file_exists( './../viewtopic.'.$phpEx ) )
 	$setmodules_admin_path = '';
 	$setmodules_module_path = "./../";
 
-	require_once( $phpbb_root_path . 'extension.inc' );
+	//require_once( $phpbb_root_path . 'extension.inc' );
 	require_once( $mx_mod_path . 'includes/functions_required.' . $phpEx );
 }
 else
@@ -49,7 +49,7 @@ else
 	$setmodules_admin_path = $setmodules_module_path . 'admin/';
 
 	@define( 'MXBB_27x', file_exists( $setmodules_root_path . 'mx_login.php' ) );
-
+	@define( 'MXBB_28x', file_exists( $setmodules_root_path . 'login.php' ) );
 	$phpEx = substr(strrchr(__FILE__, '.'), 1);
 }
 
@@ -64,11 +64,13 @@ if ( !empty( $setmodules ) )
 	$module['KB_title']['6_Custom_Field'] 	= $setmodules_admin_path . $filename . "?action=custom_manage";
 	return;
 }
-
+@define('IN_PORTAL', 1);
+//
 // Includes
-require( $mx_root_path . '/admin/pagestart.' . $phpEx );
-include_once( $setmodules_root_path . $setmodules_module_path . 'kb/includes/kb_constants.' . $phpEx );
-include( $module_root_path . 'kb/kb_common.' . $phpEx );
+//
+include($mx_root_path . '/admin/pagestart.' . $phpEx);
+include($module_root_path . 'kb/includes/kb_constants.' . $phpEx );
+include($module_root_path . 'kb/kb_common.' . $phpEx );
 
 // **********************************************************************
 // Read language definition
@@ -102,6 +104,16 @@ else
 $action = ( isset( $_REQUEST['action'] ) ) ? htmlspecialchars( $_REQUEST['action'] ) : 'setting';
 
 //
+// expected actions
+//
+@define( 'settings', 'settings' );
+@define( 'cat_manage', 'cat_manage' );
+@define( 'article_manage', 'article_manage' );
+@define( 'auth_manage', 'auth_manage' );
+@define( 'types_manage', 'types_manage' );
+@define( 'custom_manage', 'custom_manage' );
+
+//
 // an array of all expected actions
 //
 $actions = array(
@@ -110,15 +122,16 @@ $actions = array(
 	//'article_manage' => 'article_manage',
 	'auth_manage' => 'auth_manage',
 	'types_manage' => 'types_manage',
-	'custom_manage' => 'custom_manage' );
+	'custom_manage' => 'custom_manage' 
+);
 
 //
 // Lets Build the page
 //
 $mx_kb->adminmodule( $actions[$action] );
-$mx_kb->modules[$actions[$action]]->main( $action );
+$mx_kb->modules[$actions[$action]]->main($action = false);
 
-$mx_kb->modules[$actions[$action]]->_kb();
+$mx_kb->_kb();
 
 include_once( $mx_root_path . 'admin/page_footer_admin.' . $phpEx );
 ?>
