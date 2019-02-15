@@ -1,0 +1,13 @@
+module=+:41=+:Knowledge Base=+:modules/mx_kb/=+:Knowledge Base module=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:41=+:42=+:KB=+:Knowledge Base Module=+:kb.php=+:
+parameter=+:42=+:79=+:kb_type_select=+:kb_type_select=+:=+:=+:0
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - KB=+:Demo block=+:42=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:41=+:96=+:Article_reader=+:Block to display articles only. No category navigation. To be used with newssuite.=+:kb_article_reader.php=+:
+parameter=+:96=+:302=+:default_article_id=+:Number=+:1=+:=+:0
+parameter=+:96=+:301=+:kb_type_select=+:kb_type_select=+:array('init'=>'1')=+:=+:0
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - Article_reader=+:Demo block=+:96=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+function=+:0=+:0=+:0=+:endoflist=+:0=+:0

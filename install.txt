@@ -1,0 +1,388 @@
+############################################################## 
+## MOD Title: Knowledge Base 
+## MOD Original Author: wGEric < eric@wwegcodes.com > (Eric Faerber) http://eric.best-1.biz 
+## MOD Addon Author: Haplo < jonohlsson@hotmail.com > (Jon Ohlsson) http://www.mx-system.com 
+## MOD Description: This mod adds a Knowledge Base manager to your board
+## MOD Version: KB MOD 2.0.1(abc...)
+## 
+## Installation Level: easy 
+## Installation Time: 5 Minutes 
+## Files To Edit: (5)
+## 		- viewonline.php
+##		- admin/index.php,
+##		- includes/page_header.php,
+##		- language/lang_english/lang_main.php, 
+##		- templates/subSilver/overall_header.tpl,
+## 
+## Included Files: (58)
+##		 - kb.php,
+##		 - kb_search.php,
+## 		 - admin/admin_kb_*.php (7),
+##		 - includes/functions_.php (4), 
+## 		 - includes/kb_.php, (9)
+## 		 - language/lang_english/lang_.php (2), 
+## 		 - templates/subSilver/kb_*.tpl (14), 
+## 		 - templates/subSilver/admin/kb_*.tpl (17), 
+## 		 - templates/subSilver/images/lang_english/*.gif (1),
+## 		 - templates/subSilver/images/*.gif (2)
+## 
+############################################################## 
+## For Security Purposes, Please Check: http://www.phpbb.com/mods/ for the 
+## latest version of this MOD. Downloading this MOD from other sites could cause malicious code 
+## to enter into your phpBB Forum. As such, phpBB will not offer support for MOD's not offered 
+## in our MOD-Database, located at: http://www.phpbb.com/mods/ 
+############################################################## 
+## 
+##
+## MOD History: 
+##
+
+## 2005/04/11 - Version KB MOD 2.0.2.
+##            - All patches 2.0.1a-e summarized in new version 2.0.2
+##            - Minor fixes "forgotten" in version 2.0.1e
+##            - tpl bug fixed for custom fields adminCP
+##            - Number of articles in cat (subcat) fixed
+##            - Hopefully the MAIL notification now works ;)
+##            - "All" reported bugs/fixes/addons in dev thread fixed (implemented)
+
+## 2005/04/09 - Version KB MOD 2.0.1e.
+##            - Category jumpbox
+##            - Permissions revised and less db queries needed
+##            - More information in PM - subject
+##            - Category PRIVATE settings for 'approval' removed. Approvals settings are now INACTIVATED, MOD, ADMIN
+##            - Fix for kb_search - now also articles titles are searchable ;)
+##            - "All" reported bugs/fixes/addons in dev thread fixed (implemented)
+
+## 2005/03/29 - Version KB MOD 2.0.1abcd...
+##            - Name changed, since much (most) is rewritten ;)
+##            - Updated with latest phpBB security patches
+##            - Category (PRIVATE) permissions
+##            - Subcategories
+##            - "Comments phpBB forum" set per category
+##            - Regenerate search tables adminCP
+##            - Rewritten PM/MAIL handling
+##            - Text reformatting options: img, link and linewidth controls
+##		      - Rewritten BBcode/html handling (once more yes)
+##			  - Custom fields added
+##            - wysiwyg feature (tinymce),
+##              you can simply download latest version from http://tinymce.moxiecode.com/ and upload into phpbbroot/modules/
+##			  - "All" reported bugs/fixes/addons in dev thread fixed (implemented)
+
+## 2004/09/14 - Version 0.7.6 + MX Addon 1.03
+##            - Comments pagination added (new db entry)
+##            - Advanced sorting options (2 new db entries)
+##		      - Rewritten BBcode/html handling
+##			  - Improved Moderator features
+##            - some tpl bugs fixed
+##			  - All reported bugs in dev thread fixed
+
+## 2004/07/05 - Version 0.7.6 + MX Addon 1.02
+##            - Article pagination added (new db entry)
+##            - rate check vs ip and userid added (2 new db entries)
+##            - add comments/rate links added
+##            - some tpl bugs fixed
+
+## 2004/06/15 - Version 0.7.6 + MX Addon 1.01
+##            - Bugfixes
+
+## 2004/06/05 - Version 0.7.6 + MX Addon 1.0
+##            - Ratings added
+##            - 'Printable version' added
+##            - Moderator group
+##            - Admin switch for 'bumping' reply post in comment thread whenever the article is edited
+##            - Admin switch for showing kb stats
+##            - Rewritten EDIT function
+##            - Switch for show comments in portal page
+##            - Additional stats: latest articles, toprated articles and most popular articles
+##            - [page] and [toc] feature for pages and table of contents entries 
+##            - Fixed lots of bugs
+##
+## 2003/08/08 - Version 0.7.6
+##            - Fixed some typos, Thanks to Gary for pointing these out
+##            - Fixed lots of bugs
+##
+## 2003/07/26 - Version 0.7.5
+##            - Multiple paged articles
+##            - Quick Stats
+##            - Minor changes
+##
+## 2003/07/17 - Version 0.7.1
+##            - Fixed a bug that could empty your topics table
+##
+## 2003/07/14 - Version 0.7.0
+## 			  - Sub Categories added
+##			  - Order Categories
+##			  - Delete Topic when deleting article
+##			  - Makes sure all articles has a topic if comments are on
+##			  - Users not logged in can post articles
+##
+## 2003/07/09 - Version 0.6.3
+## 			  - Works with MSSQL
+##			  - Topic uses boards language instead of English
+##
+## 2003/07/08 - Version 0.6.2
+##			  - Fixed email_kb_admin() in kb.php
+##			  - View counter is fixed when viewing a cateogory
+##			  - Fixed it so amount of articles in a category decrease after
+##			    deleting an article
+##			  - All editing article bugs have been fixed
+##			  - Install script has been fixed.
+##
+## 07/02/03 - Version 0.6.1
+##	    	- Fixed bugs (ACP Type manager, HTML when viewing 
+##		  	  article, Anyone could edit article if they changed the URL)
+##	    	- Added a view counter for the articles.
+##
+## 06/30/03 - Version 0.6.0
+## 			- Added Search
+##			- Fixed a couple of bugs
+##			- Changed the way the posts look
+##
+## 06/12/03 - Beta - 0.5.1
+## 			- Fixed a bug in the functions.  Forgot to put $phpEx as a global.
+##
+## 06/11/03 - Beta 2 - 0.5.0
+## 			- Rewrote most of the code.  This made some of the files smaller
+##			- Comments on articles feature
+##			- Fixed most of the known bugs
+##			- Dutch Translation by NL Web Hebbies
+##
+## 05/13/03 - Beta 0.4.3
+##          - FIX: Check for empty category and type by ZapZap
+##
+## 05/10/03 - Beta 0.4.2
+##          - FIX: preview fixed by wGEric
+##          - FIX: html parsed even if html of fixed by wGEric
+##          - FIX: missing text for category on some forms
+##
+## 05/06/03 - Beta 0.4.1
+##          - Removed pretext table and moved pretext fields to config table 
+##          - Added entry to viewonline list
+## 
+## 05/01/03 - Beta 0.4.0
+## 	    - Added Pretext Mod by Palamedes < palamedes@rocketmail.com > (Jason Ellis) http://www.randomstringofwords.com
+##
+## 04/28/03 - Beta 0.3.2
+##	    - Added Spanish Files
+##	    - Used cleaned up code from MJ - Thanks!
+##
+## 04/19/03 - Beta 0.3.1 - Fixed some bugs
+##
+## 04/18/03 - Beta 0.3.0 
+##	    - Added, 'Preview Articles' before posting them.
+##	    - Added, Admin's and Moderator's articles are automatically approved.
+##	    - Added, the ability to change the article types
+##
+## 04/12/03 - Beta 0.2.0
+##	    - Added, the ability to edit articles
+## 	    - Added, E-mail or PM Notification of a new article
+##	    - Added. configuration file in the admin panel. In there you can allow new articles to be posted, allow edits, and choose whether to be PM, e-mailed, or get no notification.
+## 
+## 04/05/03 - Beta 0.1.0 
+##	    - First Release 
+## 
+##
+##############################################################  
+## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
+##############################################################
+
+#
+#-----[ Installation instructions ]------------------------------------------ 
+#
+
+1) Edit the original phpBB2 files (fresh install only).
+2) Upload all shipped Files.
+3) Prepare the database by running the included install/upgrade-*.php file.
+   - use install_kb_tables.php for a fresh installation, 
+     and upgrade_kb_tables.php if upgrading (even if from original kb 0.76 - supported! )
+4) Delete install/upgrade files!
+
+#
+#-----[ Shipped files to upload ]------------------------------------------ 
+#
+
+#
+#-----[ COPY ]------------------------------------------ 
+#
+copy mx_kb/install_kb_tables.php to phpbbroot/install_kb_tables.php
+or
+copy mx_kb/upgrade_kb_tables.php to phpbbroot/upgrade_kb_tables.php
+
+copy mx_kb/kb.php to kb.php
+copy mx_kb/kb_search.php to phpbbroot/kb_search.php
+
+copy mx_kb/admin/admin__.php to phpbbroot/admin/admin__.php
+
+copy mx_kb/includes/functions_.php to phpbbroot/includes/functions_.php
+
+copy mx_kb/includes/kb_.php to phpbbroot/includes/kb_.php
+
+copy mx_kb/language/lang_english/lang_kb.php to phpbbroot/language/lang_english/lang_kb.php
+
+copy mx_kb/templates/print_version.css to phpbbroot/templates/print_version.css
+
+copy mx_kb/templates/subSilver/kb_.tpl to phpbbroot/templates/subSilver/kb_.tpl
+
+copy mx_kb/templates/subSilver/admin/kb_.tpl to phpbbroot/templates/subSilver/admin/kb_.tpl
+
+copy mx_kb/templates/subSilver/images/icon_.gif to phpbbroot/templates/subSilver/images/icon_.gif
+
+copy mx_kb/templates/subSilver/images/lang_english/kb.gif to phpbbroot/templates/subSilver/images/lang_english/kb.gif
+
+#
+#-----[ Note ]------------------------------------------ 
+#
+
+Files distributed in this zip, NOT used by the phpBB version of the KB MOD
+
+- kb_pages.php
+- kb_defs.php
+- admin/mx_config.php
+- kb_article_reader.php
+
+If they have been included by accident, simply remove. They are only used for the mxBB version of the mod!!
+
+#
+#-----[ phpBB files to mod ]------------------------------------------ 
+#
+
+#
+#-----[ OPEN ]------------------------------------------ 
+#
+
+viewonline.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+				case PAGE_FAQ:
+					$location = $lang['Viewing_FAQ'];
+					$location_url = "faq.$phpEx";
+					break;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+					case PAGE_KB:
+						$location = $lang['Viewing_KB'];
+						$location_url = "kb.$phpEx";
+						break;
+# 
+#-----[ OPEN ]------------------------------------------ 
+#
+
+admin/index.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+						case PAGE_FAQ:
+							$location = $lang['Viewing_FAQ'];
+							$location_url = "index.$phpEx?pane=right";
+							break;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+						case PAGE_KB:
+							$location = $lang['Viewing_KB'];
+							$location_url = "kb.$phpEx";
+							break;
+							
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+					case PAGE_FAQ:
+						$location = $lang['Viewing_FAQ'];
+						$location_url = "index.$phpEx?pane=right";
+						break
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+					case PAGE_KB:
+						$location = $lang['Viewing_KB'];
+						$location_url = "kb.$phpEx";
+						break;
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+#
+includes/page_header.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+'L_FAQ' => $lang['FAQ'],
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+
+'L_KB' => $lang['KB_title'],
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+
+'U_FAQ' => append_sid('faq.'.$phpEx),
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+'U_KB' => append_sid('kb.'.$phpEx),
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+
+$lang['FAQ'] = 'FAQ';
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+
+$lang['KB_title'] = 'Knowledge Base';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+
+$lang['Viewing_FAQ'] = 'Viewing FAQ';
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+#
+
+$lang['Viewing_KB'] = 'Viewing KB';
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+#
+templates/subSilver/overall_header.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">&nbsp;<a href="{U_FAQ}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_FAQ}" hspace="3" />{L_FAQ}</a></span><span class="mainmenu">&nbsp; &nbsp;<a href="{U_SEARCH}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_search.gif" width="12" height="13" border="0" alt="{L_SEARCH}" hspace="3" />{L_SEARCH}</a>&nbsp; &nbsp;<a href="{U_MEMBERLIST}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_MEMBERLIST}" hspace="3" />{L_MEMBERLIST}</a>&nbsp; &nbsp;<a href="{U_GROUP_CP}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_groups.gif" width="12" height="13" border="0" alt="{L_USERGROUPS}" hspace="3" />{L_USERGROUPS}</a>&nbsp; 
+
+# 
+#-----[ IN-LINE FIND ]------------------------------------------ 
+#
+<a href="{U_FAQ}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_FAQ}" hspace="3" />{L_FAQ}</a></span><span class="mainmenu">&nbsp; 
+# 
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+# 
+
+ &nbsp;<a href="{U_KB}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_faq.gif" width="12" height="13" border="0" alt="{L_KB}" hspace="3" />{L_KB}</a>&nbsp; 
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------ 
+# 
+# EoM
