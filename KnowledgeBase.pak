@@ -1,13 +1,52 @@
-module=+:41=+:Knowledge Base=+:modules/mx_kb/=+:Knowledge Base module=+:1
+module=+:52=+:Knowledge Base=+:modules/mx_kb/=+:Knowledge Base Articles module=+:1
 New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
-function=+:41=+:42=+:KB=+:Knowledge Base Module=+:kb.php=+:
-parameter=+:42=+:79=+:kb_type_select=+:kb_type_select=+:=+:=+:0
+function=+:52=+:57=+:KB - Main=+:Knowledge Base Module=+:kb.php=+:
+parameter=+:57=+:115=+:kb_type_select=+:kb_type_select=+:=+:=+:0=+:0
 parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
-block=+:=+:Demo - KB=+:Demo block=+:42=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+block=+:=+:Demo - KB - Main=+:Demo block=+:57=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
 New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
-function=+:41=+:96=+:Article_reader=+:Block to display articles only. No category navigation. To be used with newssuite.=+:kb_article_reader.php=+:
-parameter=+:96=+:302=+:default_article_id=+:Number=+:1=+:=+:0
-parameter=+:96=+:301=+:kb_type_select=+:kb_type_select=+:array('init'=>'1')=+:=+:0
+function=+:52=+:58=+:KB - Application=+:AJAX implementation=+:kb_app.php=+:
+parameter=+:58=+:116=+:kb_type_select=+:kb_type_select=+:=+:=+:1=+:0
 parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
-block=+:=+:Demo - Article_reader=+:Demo block=+:96=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+block=+:=+:Demo - KB - Application=+:Demo block=+:58=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:52=+:59=+:KB - Article reader=+:Articles only. No category navigation. To be used with other navigation blocks.=+:kb_article_reader.php=+:
+parameter=+:59=+:117=+:kb_type_select=+:kb_type_select=+:array('init'=>'1')=+:=+:0=+:10
+parameter=+:59=+:118=+:default_article_id=+:Number=+:1=+:=+:0=+:20
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - KB - Article reader=+:Demo block=+:59=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:52=+:60=+:KB - Last Articles=+:KB Last Articles=+:kb_last_article.php=+:
+parameter=+:60=+:119=+:Last_Article_Cat=+:kb_type_select=+:array()=+:=+:0=+:10
+parameter=+:60=+:120=+:Last_Article_Number_Title=+:Number=+:15=+:=+:0=+:20
+parameter=+:60=+:121=+:article_filter_date=+:Function=+:5=+:get_list_static("{parameter_id}[]",array("no limit", "1 day", "2 days", "3 days", "1 week", "2 weeks", "3 weeks", "1 month", "2 months", "3 months", "6 months", "1 year"),"{parameter_value}")=+:0=+:30
+parameter=+:60=+:122=+:Last_Article_Target=+:Values=+:_blank=+:=+:0=+:40
+parameter=+:60=+:123=+:Last_Article_Title_Length=+:Number=+:30=+:=+:0=+:50
+parameter=+:60=+:124=+:Last_Article_Display_Last_Author=+:Boolean=+:TRUE=+:=+:0=+:60
+parameter=+:60=+:125=+:Last_Article_Display_Icon_View=+:Boolean=+:TRUE=+:=+:0=+:70
+parameter=+:60=+:126=+:Last_Article_Align=+:Values=+:left=+:=+:0=+:80
+parameter=+:60=+:127=+:Last_Article_Display_Author=+:Boolean=+:FALSE=+:=+:0=+:90
+parameter=+:60=+:128=+:Last_Article_Display_Date=+:Boolean=+:TRUE=+:=+:0=+:100
+parameter=+:60=+:129=+:Last_Article_Display_Cat=+:Boolean=+:TRUE=+:=+:0=+:110
+parameter=+:60=+:130=+:Last_Article_Mode=+:Menu_single_select=+:KB=+:a:2:{i:0;s:2:"KB";i:1;s:9:"KB_Reader";}=+:0=+:120
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - KB - Last Articles=+:Demo block=+:60=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:52=+:61=+:KB - Lists=+:Sorted articles block=+:kb_lists.php=+:
+parameter=+:61=+:131=+:target_block=+:Function=+:0=+:get_list_formatted("block_list","{parameter_value}","{parameter_id}[]", "kb.php", false, "kb_app.php")=+:0=+:10
+parameter=+:61=+:132=+:toplist_cat_id=+:kb_quick_cat=+:0=+:=+:1=+:20
+parameter=+:61=+:133=+:toplist_sort_method=+:Menu_single_select=+:latest=+:a:4:{i:0;s:6:"latest";i:1;s:12:"most_popular";i:2;s:8:"toprated";i:3;s:6:"random";}=+:1=+:30
+parameter=+:61=+:134=+:toplist_display_options=+:Checkbox_multiple_select=+:a:1:{i:0;s:4:"date";}=+:a:4:{i:0;s:4:"date";i:1;s:8:"username";i:2;s:7:"counter";i:3;s:4:"rate";}=+:1=+:40
+parameter=+:61=+:135=+:toplist_pagination=+:Number=+:3=+:=+:0=+:50
+parameter=+:61=+:136=+:toplist_use_pagination=+:Boolean=+:TRUE=+:=+:1=+:60
+parameter=+:61=+:137=+:toplist_filter_date=+:Function=+:5=+:get_list_static("{parameter_id}[]",array("no limit", "1 day", "2 days", "3 days", "1 week", "2 weeks", "3 weeks", "1 month", "2 months", "3 months", "6 months", "1 year"),"{parameter_value}")=+:1=+:70
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - KB - Lists=+:Demo block=+:61=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
+New_function=+:---------------------------=+:0=+:0=+:0=+:0=+:0
+function=+:52=+:62=+:KB - Mini=+:Mini/quick KB block=+:kb_mini.php=+:
+parameter=+:62=+:138=+:mini_default_cat_id=+:kb_quick_cat=+:0=+:=+:1=+:0
+parameter=+:62=+:139=+:mini_display_options=+:Checkbox_multiple_select=+:a:1:{i:0;s:4:"date";}=+:a:4:{i:0;s:4:"date";i:1;s:8:"username";i:2;s:7:"counter";i:3;s:4:"rate";}=+:1=+:0
+parameter=+:62=+:140=+:mini_pagination=+:Number=+:5=+:=+:1=+:0
+parameter=+:0=+:0=+:0=+:endoflist=+:0=+:0
+block=+:=+:Demo - KB - Mini=+:Demo block=+:62=+:0=+:5=+:0=+:0=+:0=+:0=+:1=+:1
 function=+:0=+:0=+:0=+:endoflist=+:0=+:0

@@ -1,29 +1,24 @@
 <?php
-/** ------------------------------------------------------------------------
- *		Subject				: mxBB - a fully modular portal and CMS (for phpBB) 
- *		Author				: Jon Ohlsson and the mxBB Team
- *		Credits				: The phpBB Group & Marc Morisette, wGeric
- *		Copyright          	: (C) 2002-2005 mxBB Portal
- *		Email             	: jon@mxbb-portal.com
- *		Project site		: www.mxbb-portal.com
- * -------------------------------------------------------------------------
- * 
- *    $Id: kb_defs.php,v 1.1 2005/12/08 15:06:46 jonohlsson Exp $
- */
-
 /**
- * This program is free software; you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation; either version 2 of the License, or
- *    (at your option) any later version.
- */
+*
+* @package MX-Publisher Module - mx_kb
+* @version $Id: kb_defs.php,v 1.4 2008/06/03 20:10:27 jonohlsson Exp $
+* @copyright (c) 2002-2006 [wGEric, Jon Ohlsson] MX-Publisher Project Team
+* @license http://opensource.org/licenses/gpl-license.php GNU General Public License v2
+*
+*/
+
+if ( !defined( 'IN_PORTAL' ) )
+{
+	die( "Hacking attempt" );
+}
 
 define( 'NEWS_CAT_TABLE', $mx_table_prefix . 'kb_categories' );
 define( 'KB_ARTICLES_TABLE', $mx_table_prefix . 'kb_articles' );
 define( 'KB_CATEGORIES_TABLE', $mx_table_prefix . 'kb_categories' );
 define( 'KB_TYPES_TABLE', $mx_table_prefix . 'kb_types' );
 
-$sql = "SELECT *  
+$sql = "SELECT *
        	FROM " . KB_TYPES_TABLE;
 
 if ( !( $type_result = $db->sql_query( $sql ) ) )

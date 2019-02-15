@@ -1,55 +1,33 @@
 <?php
-/** ------------------------------------------------------------------------
- *		Subject				: mxBB - a fully modular portal and CMS (for phpBB) 
- *		Author				: Jon Ohlsson and the mxBB Team
- *		Credits				: The phpBB Group & Marc Morisette, Mohd Basri & paFileDB 3.0 ©2001/2002 PHP Arena
- *		Copyright          	: (C) 2002-2005 mxBB Portal
- *		Email             	: jon@mxbb-portal.com
- *		Project site		: www.mxbb-portal.com
- * -------------------------------------------------------------------------
- * 
- *    $Id: kb_search.php,v 1.1 2005/12/08 15:06:47 jonohlsson Exp $
- */
-
 /**
- * This program is free software; you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation; either version 2 of the License, or
- *    (at your option) any later version.
- */
- 
-/*
-  paFileDB 3.0
-  ©2001/2002 PHP Arena
-  Written by Todd
-  todd@phparena.net
-  http://www.phparena.net
-  Keep all copyright links on the script visible
-  Please read the license included with this script for more information.
+*
+* @package MX-Publisher Module - mx_kb
+* @version $Id: kb_search.php,v 1.15 2008/07/15 22:05:43 jonohlsson Exp $
+* @copyright (c) 2002-2006 [wGEric, Jon Ohlsson] mxBB Project Team
+* @license http://opensource.org/licenses/gpl-license.php GNU General Public License v2
+*
 */
 
+if ( !defined( 'IN_PORTAL' ) )
+{
+	die( "Hacking attempt" );
+}
+
+/**
+ * Enter description here...
+ *
+ */
 class mx_kb_search extends mx_kb_public
 {
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $action
+	 */
 	function main( $action )
 	{
 		global $template, $lang, $board_config, $phpEx, $kb_config, $db, $images;
-		global $_REQUEST, $_POST, $phpbb_root_path, $userdata; 
-		global $mx_root_path, $module_root_path, $is_block, $phpEx;
-
-		/*
-		if ( !$this->auth_global['auth_search'] )
-		{
-			if ( !$userdata['session_logged_in'] )
-			{
-				// mx_redirect(append_sid($mx_root_path . "login.$phpEx?redirect=".this_kb_mxurl("action=stats"), true));
-			}
-
-			$message = sprintf( $lang['Sorry_auth_search'], $this->auth_global['auth_search_type'] );
-			mx_message_die( GENERAL_MESSAGE, $message );
-		}
-		*/
-		
-		include_once( $phpbb_root_path . 'includes/functions_search.' . $phpEx );
+		global $phpbb_root_path, $userdata, $mx_root_path, $module_root_path, $is_block;
 
 		if ( isset( $_REQUEST['search_keywords'] ) )
 		{
@@ -100,20 +78,55 @@ class mx_kb_search extends mx_kb_public
 					$sort_method = 'views';
 					break;
 				case 'article_rating':
-					$sort_method = 'article_rating';
+					//$sort_method = 'article_rating';
 					break;
-				/*	
-				case 'file_update_time':
-					$sort_method = 'file_update_time';
-					break;
-				*/
 				default:
-					$sort_method = $kb_config['sort_method'];
+					switch ( $kb_config['sort_method'] )
+					{
+						case 'Id':
+						$sort_method = 'article_id';
+							break;
+						case 'Latest':
+						$sort_method = 'article_date';
+							break;
+						case 'Toprated':
+						$sort_method = 'rating';
+							break;
+						case 'Most_popular':
+						$sort_method = 'views';
+							break;
+						case 'Userrank':
+						$sort_method = 'user_rank';
+							break;
+						case 'Alphabetic':
+						$sort_method = 'article_title';
+							break;
+					}
 			}
 		}
 		else
 		{
-			$sort_method = $kb_config['sort_method'];
+			switch ( $kb_config['sort_method'] )
+			{
+				case 'Id':
+				$sort_method = 'article_id';
+					break;
+				case 'Latest':
+				$sort_method = 'article_date';
+					break;
+				case 'Toprated':
+				$sort_method = 'rating';
+					break;
+				case 'Most_popular':
+				$sort_method = 'views';
+					break;
+				case 'Userrank':
+				$sort_method = 'user_rank';
+					break;
+				case 'Alphabetic':
+				$sort_method = 'article_title';
+					break;
+			}
 		}
 
 		if ( isset( $_REQUEST['sort_order'] ) )
@@ -135,8 +148,8 @@ class mx_kb_search extends mx_kb_public
 			$sort_order = $kb_config['sort_order'];
 		}
 
-		$limit_sql = ( $start == 0 ) ? $kb_config['pagination'] : $start . ',' . $kb_config['pagination']; 
-		
+		$limit_sql = ( $start == 0 ) ? $kb_config['pagination'] : $start . ',' . $kb_config['pagination'];
+
 		//
 		// encoding match for workaround
 		//
@@ -174,8 +187,8 @@ class mx_kb_search extends mx_kb_public
 						mx_message_die( GENERAL_MESSAGE, $lang['No_search_match'] );
 					}
 
-					$sql = "SELECT * 
-					FROM " . KB_ARTICLES_TABLE . " 
+					$sql = "SELECT *
+					FROM " . KB_ARTICLES_TABLE . "
 					WHERE article_author_id IN ($matching_userids)";
 
 					if ( !( $result = $db->sql_query( $sql ) ) )
@@ -232,10 +245,10 @@ class mx_kb_search extends mx_kb_public
 								}
 								$match_word = addslashes( '%' . str_replace( '*', '', $split_search[$i] ) . '%' );
 
-								$sql = "SELECT article_id 
-								FROM " . KB_ARTICLES_TABLE . " 
-								WHERE (article_title LIKE '$match_word' 
-								OR username LIKE '$match_word' 
+								$sql = "SELECT article_id
+								FROM " . KB_ARTICLES_TABLE . "
+								WHERE (article_title LIKE '$match_word'
+								OR username LIKE '$match_word'
 								OR article_description LIKE '$match_word'
 								OR article_body LIKE '$match_word')";
 
@@ -277,9 +290,9 @@ class mx_kb_search extends mx_kb_public
 
 								if ( $comments_search )
 								{
-									$sql = "SELECT article_id 
-								FROM " . KB_COMMENTS_TABLE . " 
-								WHERE (comments_title LIKE '$match_word' 
+									$sql = "SELECT article_id
+								FROM " . KB_COMMENTS_TABLE . "
+								WHERE (comments_title LIKE '$match_word'
 								OR comments_text LIKE '$match_word')";
 
 									if ( !( $result = $db->sql_query( $sql ) ) )
@@ -337,10 +350,10 @@ class mx_kb_search extends mx_kb_public
 
 					unset( $result_list );
 					$total_match_count = count( $search_ids );
-				} 
-				
+				}
+
 				// Author name search
-				
+
 				if ( $search_author != '' )
 				{
 					$search_author = str_replace( '*', '%', trim( str_replace( "\'", "''", $search_author ) ) );
@@ -352,10 +365,10 @@ class mx_kb_search extends mx_kb_public
 
 					if ( $search_author == '' )
 					{
-						$sql = "SELECT article_id, article_category_id 
+						$sql = "SELECT article_id, article_category_id
 						FROM " . KB_ARTICLES_TABLE . "
-						WHERE article_id IN (" . implode( ", ", $search_ids ) . ") 
-							$where_sql 
+						WHERE article_id IN (" . implode( ", ", $search_ids ) . ")
+							$where_sql
 						GROUP BY article_id";
 					}
 					else
@@ -370,9 +383,9 @@ class mx_kb_search extends mx_kb_public
 						$where_sql .= ( $cat_id ) ? 'AND article_category_id IN (' . $this->gen_cat_ids( $cat_id, '' ) . ')' : '';
 
 						$sql = "SELECT f.article_id, f.article_category_id
-						FROM $from_sql 
-						WHERE f.article_id IN (" . implode( ", ", $search_ids ) . ") 
-							$where_sql 
+						FROM $from_sql
+						WHERE f.article_id IN (" . implode( ", ", $search_ids ) . ")
+							$where_sql
 						GROUP BY f.article_id";
 					}
 
@@ -395,14 +408,14 @@ class mx_kb_search extends mx_kb_public
 				else
 				{
 					mx_message_die( GENERAL_MESSAGE, $lang['No_search_match'] );
-				} 
-				
+				}
+
 				// Finish building query (for all combinations)
 				// and run it ...
-				
+
 				$expiry_time = $current_time - $board_config['session_length'];
 				$sql = "SELECT session_id
-					FROM " . SESSIONS_TABLE . " 
+					FROM " . SESSIONS_TABLE . "
 					WHERE session_time > $expiry_time";
 
 				if ( $result = $db->sql_query( $sql ) )
@@ -415,17 +428,17 @@ class mx_kb_search extends mx_kb_public
 
 					if ( count( $delete_search_ids ) )
 					{
-						$sql = "DELETE FROM " . SEARCH_TABLE . " 
+						$sql = "DELETE FROM " . SEARCH_TABLE . "
 							WHERE session_id NOT IN (" . implode( ", ", $delete_search_ids ) . ")";
 						if ( !$result = $db->sql_query( $sql ) )
 						{
 							mx_message_die( GENERAL_ERROR, 'Could not delete old search id sessions', '', __LINE__, __FILE__, $sql );
 						}
 					}
-				} 
-				
+				}
+
 				// Store new result data
-				
+
 				$search_results = implode( ', ', $search_ids );
 
 				$store_search_data = array();
@@ -441,12 +454,12 @@ class mx_kb_search extends mx_kb_public
 				mt_srand ( ( double ) microtime() * 1000000 );
 				$search_id = mt_rand();
 
-				$sql = "UPDATE " . SEARCH_TABLE . " 
+				$sql = "UPDATE " . SEARCH_TABLE . "
 					SET search_id = $search_id, search_array = '" . str_replace( "\'", "''", $result_array ) . "'
 					WHERE session_id = '" . $userdata['session_id'] . "'";
 				if ( !( $result = $db->sql_query( $sql ) ) || !$db->sql_affectedrows() )
 				{
-					$sql = "INSERT INTO " . SEARCH_TABLE . " (search_id, session_id, search_array) 
+					$sql = "INSERT INTO " . SEARCH_TABLE . " (search_id, session_id, search_array)
 						VALUES($search_id, '" . $userdata['session_id'] . "', '" . str_replace( "\'", "''", $result_array ) . "')";
 					if ( !( $result = $db->sql_query( $sql ) ) )
 					{
@@ -459,9 +472,9 @@ class mx_kb_search extends mx_kb_public
 				$search_id = intval( $search_id );
 				if ( $search_id )
 				{
-					$sql = "SELECT search_array 
-						FROM " . SEARCH_TABLE . " 
-						WHERE search_id = $search_id  
+					$sql = "SELECT search_array
+						FROM " . SEARCH_TABLE . "
+						WHERE search_id = $search_id
 						AND session_id = '" . $userdata['session_id'] . "'";
 					if ( !( $result = $db->sql_query( $sql ) ) )
 					{
@@ -484,30 +497,30 @@ class mx_kb_search extends mx_kb_public
 				switch ( SQL_LAYER )
 				{
 					case 'oracle':
-						$sql = "SELECT a.*, a.article_rating AS rating, a.article_totalvotes AS total_votes, u.user_id, u.username, c.category_id, c.category_name, COUNT(cm.comments_id) AS total_comments
+						$sql = "SELECT a.*, AVG(r.rate_point) AS rating, COUNT(r.votes_article) AS total_votes, u.user_id, u.username, c.category_id, c.category_name, COUNT(cm.comments_id) AS total_comments
 							FROM " . KB_ARTICLES_TABLE . " AS a, " . KB_VOTES_TABLE . " AS r, " . USERS_TABLE . " AS u, " . KB_CATEGORIES_TABLE . " AS c, " . KB_COMMENTS_TABLE . " AS cm
-							WHERE a.article_id IN ($search_results) 
-							AND a.article_id = r.votes_file(+) 
-							AND a.article_author_id = u.user_id(+) 
+							WHERE a.article_id IN ($search_results)
+							AND a.article_id = r.votes_article(+)
+							AND a.article_author_id = u.user_id(+)
 							AND a.article_id = cm.article_id(+)
-							AND c.category_id = a.article_category_id 
-							AND a.approved = '1' 
-							GROUP BY a.article_id 
-							ORDER BY $sort_method $sort_order 
+							AND c.category_id = a.article_category_id
+							AND a.approved = '1'
+							GROUP BY a.article_id
+							ORDER BY $sort_method $sort_order
 							LIMIT $limit_sql";
 						break;
 
 					default:
-						$sql = "SELECT a.*, a.article_rating AS rating, a.article_totalvotes AS total_votes, u.user_id, u.username, c.category_id, c.category_name, COUNT(cm.comments_id) AS total_comments
-							FROM " . KB_ARTICLES_TABLE . " AS a, " . KB_CATEGORIES_TABLE . " AS c
-								LEFT JOIN " . KB_VOTES_TABLE . " AS r ON a.article_id = r.votes_file 
+						$sql = "SELECT a.*, AVG(r.rate_point) AS rating, COUNT(r.votes_article) AS total_votes, u.user_id, u.username, c.category_id, c.category_name, COUNT(cm.comments_id) AS total_comments
+							FROM " . KB_CATEGORIES_TABLE . " AS c, " . KB_ARTICLES_TABLE . " AS a
+								LEFT JOIN " . KB_VOTES_TABLE . " AS r ON a.article_id = r.votes_article
 								LEFT JOIN " . USERS_TABLE . " AS u ON a.article_author_id = u.user_id
 								LEFT JOIN " . KB_COMMENTS_TABLE . " AS cm ON a.article_id = cm.article_id
-							WHERE a.article_id IN ($search_results) 
+							WHERE a.article_id IN ($search_results)
 							AND c.category_id = a.article_category_id
-							AND a.approved = '1' 
-							GROUP BY a.article_id 
-							ORDER BY $sort_method $sort_order 
+							AND a.approved = '1'
+							GROUP BY a.article_id
+							ORDER BY $sort_method $sort_order
 							LIMIT $limit_sql";
 						break;
 				}
@@ -528,65 +541,36 @@ class mx_kb_search extends mx_kb_public
 				$l_search_matches = ( $total_match_count == 1 ) ? sprintf( $lang['Found_search_match'], $total_match_count ) : sprintf( $lang['Found_search_matches'], $total_match_count );
 
 				$template->set_filenames( array( 'body' => 'kb_search_result.tpl' ) );
-				
-				$template->assign_vars( array( 
+
+				$template->assign_vars( array(
 					'L_SEARCH_MATCHES' => $l_search_matches,
 					'L_SEARCH_RESULTS' => $lang['Search_results']
 				 ));
 
 				for( $i = 0; $i < count( $searchset ); $i++ )
 				{
-					$cat_url = append_sid( this_kb_mxurl( 'mode=cat&cat=' . $searchset[$i]['category_id'] ) );
-					$file_url = append_sid( this_kb_mxurl( 'mode=article&k=' . $searchset[$i]['article_id'] ) ); 
+					$cat_url = mx_append_sid( $this->this_mxurl( 'mode=cat&cat=' . $searchset[$i]['category_id'] ) );
+					$file_url = mx_append_sid( $this->this_mxurl( 'mode=article&k=' . $searchset[$i]['article_id'] ) );
 					// ===================================================
 					// Format the date for the given article
 					// ===================================================
-					$date = create_date( $board_config['default_dateformat'], $searchset[$i]['article_date'], $board_config['board_timezone'] ); 
+					$date = phpBB2::create_date( $board_config['default_dateformat'], $searchset[$i]['article_date'], $board_config['board_timezone'] );
 					// ===================================================
 					// Get rating for the article and format it
 					// ===================================================
-					$rating = ( $searchset[$i]['rating'] != 0 ) ? round( $searchset[$i]['rating'], 2 ) . ' / 10' : $lang['Not_rated']; 
+					$rating = ( $searchset[$i]['rating'] != 0 ) ? round( $searchset[$i]['rating'], 2 ) . ' / 10' : $lang['Not_rated'];
 					// ===================================================
 					// If the article is new then put a new image in front of it
 					// ===================================================
-					/*
-					$is_new = false;
-					if ( time() - ( $kb_config['settings_newdays'] * 24 * 60 * 60 ) < $searchset[$i]['article_date'] )
-					{
-						$is_new = true;
-					} 
-					*/
-					// ===================================================
-					// Get the post icon fot this file
-					// ===================================================
-					/*
-					if ( $searchset[$i]['file_pin'] != FILE_PINNED )
-					{
-						if ( $searchset[$i]['file_posticon'] == 'none' || $searchset[$i]['file_posticon'] == 'none.gif' )
-						{
-							$posticon = '&nbsp;';
-						}
-						else
-						{
-							$posticon = '<img src="' . $module_root_path . ICONS_DIR . $searchset[$i]['file_posticon'] . '" border="0" />';
-						}
-					}
-					else
-					{
-						$posticon = '<img src="' . $phpbb_root_path . $images['folder_sticky'] . '" border="0" />';
-					}
-					*/
-					
-					$poster = ( $searchset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . append_sid( $phpbb_root_path . 'profile.' . $phpEx . '?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $searchset[$i]['user_id'] ) . '">' : '';
+
+					$poster = ( $searchset[$i]['user_id'] != ANONYMOUS ) ? '<a href="' . mx_append_sid( $phpbb_root_path . 'profile.' . $phpEx . '?mode=viewprofile&amp;' . POST_USERS_URL . '=' . $searchset[$i]['user_id'] ) . '">' : '';
 					$poster .= ( $searchset[$i]['user_id'] != ANONYMOUS ) ? $searchset[$i]['username'] : $lang['Guest'];
 					$poster .= ( $searchset[$i]['user_id'] != ANONYMOUS ) ? '</a>' : '';
 
-					$template->assign_block_vars( 'searchresults', array( 
+					$template->assign_block_vars( 'searchresults', array(
 						'CAT_NAME' => $searchset[$i]['category_name'],
-						// 'FILE_NEW_IMAGE' => $images['icon_post'],
-						'PIN_IMAGE' => '<img src="' . $phpbb_root_path . $images['icon_newest_reply'] . '" border="0" />',
+						'PIN_IMAGE' => '<img src="' . $images['kb_icon_newest_reply'] . '" border="0" />',
 
-						// 'IS_NEW_FILE' => $is_new,
 						'FILE_NAME' => $searchset[$i]['article_title'],
 						'FILE_DESC' => $searchset[$i]['article_description'],
 						'FILE_SUBMITER' => $poster,
@@ -594,18 +578,18 @@ class mx_kb_search extends mx_kb_public
 						'RATING' => $rating,
 						'DOWNLOADS' => $searchset[$i]['views'],
 						'U_FILE' => $file_url,
-						'U_CAT' => $cat_url ) 
+						'U_CAT' => $cat_url )
 					);
 				}
-				$base_url = append_sid( this_kb_mxurl( "mode=search&amp;search_id=$search_id" ) );
+				$base_url = mx_append_sid( $this->this_mxurl( "mode=search&amp;search_id=$search_id" ) );
 
-				$template->assign_vars( array( 
-					'PAGINATION' => generate_pagination( $base_url, $total_match_count, $kb_config['pagination'], $start ),
+				$template->assign_vars( array(
+					'PAGINATION' => phpBB2::generate_pagination( $base_url, $total_match_count, $kb_config['pagination'], $start ),
 					'PAGE_NUMBER' => sprintf( $lang['Page_of'], ( floor( $start / $kb_config['pagination'] ) + 1 ), ceil( $total_match_count / $kb_config['pagination'] ) ),
 					'L_MODULE' => $kb_config['module_name'],
 
-					'U_INDEX' => append_sid( $mx_root_path . 'index.' . $phpEx ),
-					'U_DOWNLOAD' => append_sid( this_kb_mxurl() ),
+					'U_INDEX' => mx_append_sid( $mx_root_path . 'index.' . $phpEx ),
+					'U_DOWNLOAD' => mx_append_sid( $this->this_mxurl() ),
 
 					'L_INDEX' => "<<",
 					'L_RATE' => $lang['Rating'],
@@ -615,7 +599,7 @@ class mx_kb_search extends mx_kb_public
 					'L_ARTICLE' => $lang['Article'],
 					'L_SUBMITER' => $lang['Submiter'],
 					'L_CATEGORY' => $lang['Category'],
-					'L_NEW_FILE' => $lang['New_file'] ) 
+					'L_NEW_FILE' => $lang['New_file'] )
 				);
 			}
 			else
@@ -623,21 +607,22 @@ class mx_kb_search extends mx_kb_public
 				mx_message_die( GENERAL_MESSAGE, $lang['No_search_match'] );
 			}
 		}
-		
+
 		if ( !isset( $_POST['submit'] ) || ( $search_author == '' && $search_keywords == '' && !$search_id ) )
 		{
-			$dropmenu = $this->generate_jumpbox( 'auth_view', 0, 0, true );	
-						
+			//$dropmenu = $this->generate_jumpbox( 'auth_view', 0, 0, true );
+			$dropmenu = $this->generate_jumpbox( 0, 0, array( $_GET['cat'] => 1 ));
+
 			$template->set_filenames( array( 'body' => 'kb_search_body.tpl' ) );
-			
-			$template->assign_vars( array( 
-				'S_SEARCH_ACTION' => append_sid( this_kb_mxurl() ),
+
+			$template->assign_vars( array(
+				'S_SEARCH_ACTION' => mx_append_sid( $this->this_mxurl() ),
 				'S_CAT_MENU' => $dropmenu,
 
 				'L_MODULE' => $kb_config['module_name'],
 
-				'U_INDEX' => append_sid( $mx_root_path . 'index.' . $phpEx ),
-				'U_DOWNLOAD' => append_sid( this_kb_mxurl() ),
+				'U_INDEX' => mx_append_sid( $mx_root_path . 'index.' . $phpEx ),
+				'U_DOWNLOAD' => mx_append_sid( $this->this_mxurl() ),
 
 				'L_YES' => $lang['Yes'],
 				'L_NO' => $lang['No'],
@@ -655,24 +640,25 @@ class mx_kb_search extends mx_kb_public
 				'L_SORT_DESCENDING' => $lang['Sort_Descending'],
 
 				'L_INDEX' => "<<",
-				
+
 				'L_RATING' => $lang['Top_toprated'],
 				'L_VIEWS' => $lang['Top_most_popular'],
 				'L_DATE' => $lang['Top_latest'],
 				'L_NAME' => $lang['Article_title'],
 				'L_UPDATE_TIME' => $lang['Update_time'],
-				
+
 				'L_SEARCH' => $lang['Search'],
 				'L_SEARCH_FOR' => $lang['Search_for'],
 				'L_ALL' => $lang['All'],
-				'L_CHOOSE_CAT' => $lang['Choose_cat'] ) 
+				'L_CHOOSE_CAT' => $lang['Choose_cat'] )
 			);
 		}
-		
+
 		//
 		// Get footer quick dropdown jumpbox
 		//
-		$this->generate_jumpbox( 'auth_view', 0, 0, true );		
+		//$this->generate_jumpbox( 'auth_view', 0, 0, true );
+		$this->generate_jumpbox( 0, 0, array( $_GET['cat'] => 1 ));
 	}
 }
 

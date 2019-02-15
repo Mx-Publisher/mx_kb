@@ -1,0 +1,34 @@
+		</dt>
+	</dl>
+
+	<dl>
+		<dt class="row1" style="text-align:left;">
+			<div class="inner bg2 panel">
+					  <!-- BEGIN jumpbox -->
+					  	<form method="get" name="jumpbox" action="{QUICK_JUMP_ACTION}" onSubmit="if(document.jumpbox.cat.value == -1){return false;}">
+					    	<table cellspacing="0" cellpadding="0" border="0">
+								<tr>
+									<td align="left" valign="middle" height="35" width="50%"><span class="gensmall">
+					  					<select name="cat" onchange="if(this.options[this.selectedIndex].value != 0){ forms['jumpbox'].submit() }">
+					    					<option value="0">{L_QUICK_JUMP}</otpion>
+											{QUICK_NAV}
+										</select>
+										{S_HIDDEN_VARS}
+										<input type="submit" value="{L_QUICK_GO}" class="liteoption" /></span>
+									</td>
+									</tr>
+							</table>
+						</form>
+						<!-- END jumpbox -->
+			</div>
+		</dt>
+	</dl>
+	</div>
+	<span class="corners-bottom"><span></span></span>	
+</div>
+{DEBUG}
+<!-- BEGIN copy_footer -->
+<div align="center"><span class="copyright"><br />
+Powered by {L_MODULE_VERSION}, {L_MODULE_ORIG_AUTHOR} & <a href="http://www.mx-publisher.com/" target="_phpbb" class="copyright">{L_MODULE_AUTHOR}</a> © 2002-2005 <br /><a href="http://www.phpbb.com/phpBB/viewtopic.php?t=200195" target="_phpbb" class="copyright">PHPBB.com MOD</a>
+</span></div>
+<!-- END copy_footer -->
