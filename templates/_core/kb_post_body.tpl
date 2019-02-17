@@ -468,7 +468,7 @@ function checkForm() {
 							</select>
 							</span>
 							</td>
-				  	   		<td nowrap="nowrap" align="right"><span class="gensmall"><a href="javascript:bbstyle(-1)" class="genmed" onMouseOver="helpline('a')">{L_BBCODE_CLOSE_TAGS}</a></span></td>
+				  	   		<td align="right"><span class="gensmall"><a href="javascript:bbstyle(-1)" class="genmed" onMouseOver="helpline('a')">{L_BBCODE_CLOSE_TAGS}</a></span></td>
 		   				</tr>
 			     	</table>
 			   	</td>

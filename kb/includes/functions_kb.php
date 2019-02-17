@@ -1202,7 +1202,7 @@ class mx_kb extends mx_kb_auth
 					ORDER BY " . $this->sort_method_extra . $this->sort_method . " " . $this->sort_order;
 			break;
 		}
-		
+
 		//if ( !( $result = $mx_kb_functions->sql_query_limit( $sql, $kb_config['pagination'], $start ) ) )
 		if (!($result = $db->sql_query_limit($sql, $kb_config['pagination'], $start)))
 		{
@@ -1310,8 +1310,8 @@ class mx_kb extends mx_kb_auth
 			// ===================================================
 			// Assign Vars
 			// ===================================================
-
 			$template->assign_block_vars( "ARTICLELIST.articlerow", array(
+				'ARTICLE_ID' => $article_id,
 				'ARTICLE' => $article_title,
 				'ARTICLE_DESCRIPTION' => $article_description,
 				'ARTICLE_TYPE' => $article_type,
@@ -1329,10 +1329,15 @@ class mx_kb extends mx_kb_auth
 				'U_CAT' => $cat_url,
 
 				//'U_APPROVE' => $approve,
-				'U_ARTICLE' => $article_url,
 
-				'ARTICLE_IMAGE' => $is_new ? $images['kb_article_new'] : $images['kb_article'],
+				'S_ARTICLE_IMAGE_NEW' => $is_new,
+				'ARTICLE_IMAGE' => $is_new ? $images['kb_article_new'] : $images['kb_article'], //subSilver based
+				'ARTICLE_IMAGE_ICON_NEW' => $images['kb_article_new'], //prosilver based new
+				'ARTICLE_IMAGE_ICON' => $images['kb_article'], //prosilver based default
+
 				'COLOR' => ( ( $i % 2 ) ? "row2" : "row1" ),
+				'ROW' => ( ( $i % 2 ) ? "bg2" : "bg1" ),
+
 				'POSTER' => $file_poster,
 
 				//'U_DELETE' => $delete

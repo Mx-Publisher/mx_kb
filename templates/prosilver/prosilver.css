@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+.icon_message, .icon_message-current {
+	border-width: 1px;
+	border-color: Transparent;
+	border-style: solid solid none solid;
+	border-bottom: none;
+}
+
+.icon_message-current {
+	background: #0076b1 none;
+	border-color: white;
+	border: none;
+	margin: 1px;
+}
+
+.icon_message-current A:link, .icon_message-current A:visited, 
+.icon_message-current A:hover {
+	background-color: #FFFFFF;
+	background-image: url("./../../../../templates/prosilver/theme/images/icon_message.gif");
+	color: White;
+}
+
+.icon_message, .icon_message-current A:active {
+	background-color: #CCCCCC;
+	background-image: url("./../../../../templates/prosilver/theme/images/icon_message.gif");
+	color: Red;
+}

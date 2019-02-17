@@ -14,11 +14,11 @@
 
 <table width="100%" cellpadding="4" cellspacing="1" class="forumline">
   <tr> 
-	<th width="4%" height="25" class="thCornerL" nowrap="nowrap">&nbsp;</th>
-	<th class="thTop" nowrap="nowrap">&nbsp;{L_CATEGORY} / {L_ARTICLE}&nbsp;</th>
-	<th class="thTop" nowrap="nowrap">&nbsp;{L_SUBMITER}&nbsp;</th>
-	<th class="thTop" nowrap="nowrap">&nbsp;{L_VIEWS}&nbsp;</th>
-	<th class="thCornerR" nowrap="nowrap">&nbsp;{L_RATE}&nbsp;</th>
+	<th width="4%" height="25" class="thCornerL">&nbsp;</th>
+	<th class="thTop">&nbsp;{L_CATEGORY} / {L_ARTICLE}&nbsp;</th>
+	<th class="thTop">&nbsp;{L_SUBMITER}&nbsp;</th>
+	<th class="thTop">&nbsp;{L_VIEWS}&nbsp;</th>
+	<th class="thCornerR">&nbsp;{L_RATE}&nbsp;</th>
   </tr>
 
  <!-- BEGIN searchresults -->
@@ -27,7 +27,7 @@
 	<td class="row1" valign="middle"><span class="forumlink"><a href="{searchresults.U_CAT}" class="forumlink">{searchresults.CAT_NAME}</a></span><br /><a href="{searchresults.U_FILE}" class="topictitle">{searchresults.FILE_NAME}</a>&nbsp;<span class="postdetails">({searchresults.DATE})</span><br /><span class="genmed">{searchresults.FILE_DESC}</span></td>
 	<td class="row1" align="center" valign="middle"><span class="name">{searchresults.FILE_SUBMITER}</span></td>
 	<td class="row1" align="center" valign="middle"><span class="postdetails">{searchresults.DOWNLOADS}</span></td>
-	<td class="row2" align="center" valign="middle" nowrap="nowrap"><span class="postdetails">{searchresults.RATING}</span></td>
+	<td class="row2" align="center" valign="middle"><span class="postdetails">{searchresults.RATING}</span></td>
   </tr> 
  <!-- END searchresults -->
   <tr> 
@@ -37,6 +37,6 @@
 <table width="100%" cellspacing="2" border="0" align="center" cellpadding="2">
   <tr> 
 	<td align="left" valign="top"><span class="nav">{PAGE_NUMBER}</span></td>
-	<td align="right" valign="top" nowrap="nowrap"><span class="nav">{PAGINATION}</span></td>
+	<td align="right" valign="top"><span class="nav">{PAGINATION}</span></td>
   </tr>
 </table>

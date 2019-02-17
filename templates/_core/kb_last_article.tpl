@@ -19,10 +19,10 @@
 				{msg_row.FORUM_NAME}
 			</span>
 			<div align="right">
-				<span class="gensmall" nowrap="nowrap">
+				<span class="gensmall">
 					{msg_row.LAST_MSG_DATE}
 				</span>
-				<span class="gensmall" nowrap="nowrap">
+				<span class="gensmall">
 					{msg_row.TOPIC_AUTHOR} {msg_row.LAST_POST_AUTHOR}{msg_row.LAST_POST_IMG}
 				</span>
 			</div>
@@ -30,6 +30,6 @@
 	</tr>
 	<!-- END msg_row -->
 	<tr valign="middle">
-		<td align="right" valign="top" nowrap="nowrap" colspan="2" height="28" class="cat"><span class="gensmall">{PAGINATION}</span></td>
+		<td align="right" valign="top" colspan="2" height="28" class="cat"><span class="gensmall">{PAGINATION}</span></td>
 	</tr>
 </table>

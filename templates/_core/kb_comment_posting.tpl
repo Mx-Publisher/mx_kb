@@ -377,7 +377,7 @@ function checkForm() {
 <!-- END preview -->
 <table width="100%" cellpadding="2" cellspacing="2">
   <tr>
-	<td valign="bottom" nowrap="nowrap">
+	<td valign="bottom">
 		<span class="nav"><a href="{U_LINK}" class="nav">{LINKS}</a>
 		<!-- BEGIN navlinks -->
 		&nbsp;&raquo;&nbsp;<a href="{navlinks.U_VIEW_CAT}" class="nav">{navlinks.CAT_NAME}</a>
@@ -465,7 +465,7 @@ function checkForm() {
 					  <option  value="24" class="genmed">{L_FONT_HUGE}</option>
 					</select>
 					</span></td>
-				  <td nowrap="nowrap" align="right"><span class="gensmall"><a href="javascript:bbstyle(-1)" class="genmed" onMouseOver="helpline('a')">{L_BBCODE_CLOSE_TAGS}</a></span></td>
+				  <td align="right"><span class="gensmall"><a href="javascript:bbstyle(-1)" class="genmed" onMouseOver="helpline('a')">{L_BBCODE_CLOSE_TAGS}</a></span></td>
 				</tr>
 			  </table>
 			</td>

@@ -108,7 +108,7 @@
 
 	<tr>
 		<!-- TITLE ------------------------------------------------------------------------------------------- -->
-		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_CAT_PERMISSIONS}</th>
+		<th class="thHead" height="25" colspan="2">{L_CAT_PERMISSIONS}</th>
 	</tr>
   	<tr>
 		<td class="row1" width="50%">{L_VIEW_LEVEL}<br><span class="gensmall">{L_VIEW_LEVEL_INFO}</span></td>

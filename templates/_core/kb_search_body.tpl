@@ -32,7 +32,7 @@
   </tr>
   <tr>
 	<td class="row1"><span class="genmed">{L_SORT_BY}:&nbsp;</span></td>
-	<td class="row2" valign="middle" nowrap="nowrap"><span class="genmed">
+	<td class="row2" valign="middle"><span class="genmed">
 	<select class="post" name="sort_method">
 		<option value='article_title'>{L_NAME}</option>
 		<option selected="selected" value='article_date'>{L_DATE}</option>
@@ -43,7 +43,7 @@
   </tr>
   <tr>
 	<td class="row1"><span class="genmed">{L_SORT_DIR}:&nbsp;</span></td>
-	<td class="row2" valign="middle" nowrap="nowrap"><span class="genmed"><input type="radio" name="sort_order" value="ASC" /> {L_SORT_ASCENDING} <input type="radio" name="sort_order" value="DESC" checked /> {L_SORT_DESCENDING}</span>&nbsp;</td>
+	<td class="row2" valign="middle"><span class="genmed"><input type="radio" name="sort_order" value="ASC" /> {L_SORT_ASCENDING} <input type="radio" name="sort_order" value="DESC" checked /> {L_SORT_DESCENDING}</span>&nbsp;</td>
   </tr>  
   <tr>   
 	<td class="cat" align="center" colspan="2"><input type="hidden" name="mode" value="search"><input class="liteoption" type="submit" name="submit" value="{L_SEARCH}"></td>

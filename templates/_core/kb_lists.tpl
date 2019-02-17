@@ -31,7 +31,7 @@
 	<!-- END articlerow -->
 	<!-- BEGIN toplist_pagination -->
 	<tr valign="middle">
-		<td align="right" colspan="2" valign="top" nowrap="nowrap" height="28" class="cat"><span class="gensmall">{BLOCK_PAGINATION}</span></td>
+		<td align="right" colspan="2" valign="top" height="28" class="cat"><span class="gensmall">{BLOCK_PAGINATION}</span></td>
 	</tr>
 	<!-- END toplist_pagination -->
 </table>

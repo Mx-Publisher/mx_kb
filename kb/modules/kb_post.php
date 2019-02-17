@@ -29,7 +29,7 @@ class mx_kb_post extends mx_kb_public
 		global $template, $mx_kb_functions, $lang, $board_config, $phpEx, $kb_config, $db, $images, $userdata;
 		global $mx_root_path, $module_root_path, $phpbb_root_path, $is_block, $mx_request_vars, $theme;
 		global $html_entities_match, $html_entities_replace, $unhtml_specialchars_match, $unhtml_specialchars_replace;
-		global $mx_block, $mx_bbcode;
+		global $mx_block, $mx_bbcode, $_SERVER;
 
 		//
 		// Go full page
@@ -182,14 +182,18 @@ class mx_kb_post extends mx_kb_public
 			$smilies_on = false;
 			$links_on = false;
 			$images_on = false;
-
+			
+			//Get board  config default_lang iso code from lang_meta.php 
 			$langcode = mx_get_langcode();
+
+			//Get board  config default_lang iso code from lang_meta.php 
+			$langguess = @function_exists('mx_guess_lang') ? mx_guess_lang(true) : $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
 			if ($this->auth_user[$cat_id]['auth_mod'])
          	{
 				$template->assign_block_vars("tinyMCE_admin", array(
 					'PATH' => $mx_root_path,
-					'LANG' => !empty($langcode) ? $langcode : $_SERVER['HTTP_ACCEPT_LANGUAGE'],
+					'LANG' => !empty($langcode) ? $langcode : $langguess,
 					'TEMPLATE' => $mx_root_path . 'templates/'. $theme['template_name'] . '/' . $theme['head_stylesheet']
 				));
          	}
@@ -197,7 +201,7 @@ class mx_kb_post extends mx_kb_public
          	{
 				$template->assign_block_vars("tinyMCE", array(
 					'PATH' => $mx_root_path,
-					'LANG' => !empty($langcode) ? $langcode : $_SERVER['HTTP_ACCEPT_LANGUAGE'],
+					'LANG' => !empty($langguess) ? $langguess : $langcode,
 					'TEMPLATE' => $mx_root_path . 'templates/'. $theme['template_name'] . '/' . $theme['head_stylesheet']
 				));
          	}

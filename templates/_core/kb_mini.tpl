@@ -27,7 +27,7 @@
 		<!-- BEGIN catcol -->
 		<tr>
 			<td><a href="{CAT_NAV_SIMPLE.catrow.catcol.U_CATEGORY}"><img src="{CAT_NAV_SIMPLE.catrow.catcol.CAT_IMAGE}" alt="{CAT_NAV_SIMPLE.catrow.catcol.CAT_DESCRIPTION}" align="absmiddle" border="0" /></a></td>
-			<td width="100%" valign="middle" nowrap="nowrap"><a href="{CAT_NAV_SIMPLE.catrow.catcol.U_CATEGORY}"  class="topictitle">{CAT_NAV_SIMPLE.catrow.catcol.CATEGORY}</a>&nbsp;<span class="gensmall">({CAT_NAV_SIMPLE.catrow.catcol.CAT_ARTICLES})</span>
+			<td width="100%" valign="middle"><a href="{CAT_NAV_SIMPLE.catrow.catcol.U_CATEGORY}"  class="topictitle">{CAT_NAV_SIMPLE.catrow.catcol.CATEGORY}</a>&nbsp;<span class="gensmall">({CAT_NAV_SIMPLE.catrow.catcol.CAT_ARTICLES})</span>
 			</td>
       	</tr>
 		<!-- END catcol -->
@@ -69,7 +69,7 @@
 	</tr>
 	<!-- END articlerow -->
 	<tr valign="middle">
-		<td align="right" colspan="2" valign="top" nowrap="nowrap" height="28" class="cat"><span class="gensmall">{BLOCK_PAGINATION}</span></td>
+		<td align="right" colspan="2" valign="top" height="28" class="cat"><span class="gensmall">{BLOCK_PAGINATION}</span></td>
 	</tr>
 </table>
 <!-- END ARTICLELIST -->

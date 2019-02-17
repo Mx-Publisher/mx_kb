@@ -11,13 +11,13 @@
 </table>
 <table  width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
-	  <th class="thCornerL" nowrap="nowrap">{L_TYPE}</th>
-	  <th class="thCornerR" nowrap="nowrap">{L_ACTION}</th>
+	  <th class="thCornerL">{L_TYPE}</th>
+	  <th class="thCornerR">{L_ACTION}</th>
 	</tr>
 	<!-- BEGIN typerow -->
 	<tr>
 	  <td class="{typerow.ROW_CLASS}"><span class="gen">{typerow.TYPE}</span></td>
-	  <td width="15%" nowrap="nowrap" class="{typerow.ROW_CLASS}" align="center">{typerow.U_EDIT} {typerow.U_DELETE}</td>
+	  <td width="15%" class="{typerow.ROW_CLASS}" align="center">{typerow.U_EDIT} {typerow.U_DELETE}</td>
 	</tr>
 	<!-- END typerow -->
 	<tr>

@@ -15,9 +15,9 @@
 
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
-	  <th class="thCornerL" nowrap="nowrap">{L_CATEGORY}</th>
-	  <th class="thTop" nowrap="nowrap">{L_ORDER}</th>
-	  <th class="thCornerR" nowrap="nowrap">{L_ACTION}</th>
+	  <th class="thCornerL">{L_CATEGORY}</th>
+	  <th class="thTop">{L_ORDER}</th>
+	  <th class="thCornerR">{L_ACTION}</th>
 	</tr>
 	<!-- BEGIN catrow -->
 	<tr>

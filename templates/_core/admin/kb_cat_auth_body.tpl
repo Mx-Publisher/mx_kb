@@ -5,17 +5,17 @@
 <form action="{S_ACTION}" method="post">
 <table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
 	<tr>
-		<th class="thCornerL" height="25" nowrap="nowrap">{L_GROUPS}</th>
-		<th class="thTop" nowrap="nowrap">{L_VIEW}</th>
-		<th class="thTop" nowrap="nowrap">{L_EDIT}</th>
-		<th class="thTop" nowrap="nowrap">{L_DELETE}</th>
-		<th class="thTop" nowrap="nowrap">{L_UPLOAD}</th>
-		<th class="thTop" nowrap="nowrap">{L_RATE}</th>
-		<th class="thTop" nowrap="nowrap">{L_VIEW_COMMENT}</th>
-		<th class="thTop" nowrap="nowrap">{L_POST_COMMENT}</th>
-		<th class="thTop" nowrap="nowrap">{L_EDIT_COMMENT}</th>
-		<th class="thTop" nowrap="nowrap">{L_DELETE_COMMENT}</th>
-		<th class="thCornerR" nowrap="nowrap">{L_IS_MODERATOR}</th>
+		<th class="thCornerL" height="25">{L_GROUPS}</th>
+		<th class="thTop">{L_VIEW}</th>
+		<th class="thTop">{L_EDIT}</th>
+		<th class="thTop">{L_DELETE}</th>
+		<th class="thTop">{L_UPLOAD}</th>
+		<th class="thTop">{L_RATE}</th>
+		<th class="thTop">{L_VIEW_COMMENT}</th>
+		<th class="thTop">{L_POST_COMMENT}</th>
+		<th class="thTop">{L_EDIT_COMMENT}</th>
+		<th class="thTop">{L_DELETE_COMMENT}</th>
+		<th class="thCornerR">{L_IS_MODERATOR}</th>
 	</tr>
 	<!-- BEGIN grouprow -->
 	<tr>

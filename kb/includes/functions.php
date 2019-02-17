@@ -331,6 +331,7 @@ class mx_kb_functions
 			'U_ADD_ARTICLE' => $add_article_url,
 			'U_MCP' => $mcp_url,
 			'U_SEARCH' => $search_url,
+			'U_KBSEARCH' => $search_url,
 			'U_TOPRATED' => mx_append_sid( $mx_kb->this_mxurl( "&mode=stats&sort_method=Toprated&sort_order=DESC") ),
 			'L_TOPRATED' => $lang['Top_toprated'],
 			'U_MOST_POPULAR' => mx_append_sid( $mx_kb->this_mxurl( "&mode=stats&sort_method=Most_popular&sort_order=DESC") ),

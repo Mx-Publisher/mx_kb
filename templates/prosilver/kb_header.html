@@ -1,3 +1,4 @@
+
 <div class="clear"></div>
 <div class="forabg block" style="vertical-align:top; width:{BLOCK_SIZE};">
 <div class="inner">
@@ -11,39 +12,48 @@
 		  </tr>
 		  <tr>
 			<td align="center" class="row1">
-			<span class="gen">&nbsp;<a href="{U_PASEARCH}" class="button">{L_SEARCH}</a>&nbsp;
+			&nbsp;<a href="{U_KBSEARCH}" class="link">
+			<button class="button search" type="submit" title="{L_SEARCH}" style="font-size:9px;">
+			<i class="fa fa-search fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_SEARCH}
+			</button></a>&nbsp;
 			<!-- IF U_ADD_ARTICLE -->
 			&nbsp;<a href="{U_ADD_ARTICLE}" class="link">
 			<button class="button editCP_switch" type="submit" title="{L_ADD_ARTICLE}" style="font-size:9px;">
-			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			<i class="fa fa-star-o fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i><span>{L_MCP_SHORT}</span>
 			{L_ADD_ARTICLE}
 			</button></a>&nbsp;
 			<!-- ENDIF -->
 			<!-- IF U_MCP -->
-			&bull;&nbsp;<a href="{U_MCP}" class="button"><b>{L_MCP}</b></a>&nbsp;
+			&nbsp;<a href="{U_MCP}" class="link">
+			<button class="button editCP_switch" type="submit" title="{L_MCP}" style="font-size:9px;">
+			<i class="fa fa-gavel fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			{L_MCP}
+			</button></a>&nbsp;
+			
 			<!-- ENDIF -->
 			</span><br />
 			<span class="genmed">
 			&nbsp;<a href="{U_VIEW_ALL}" class="link">
 			<button class="button editCP_switch" type="submit" title="{L_VIEW_ALL}" style="font-size:9px;">
-			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			<i class="fa fa-star-o fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
 			{L_VIEW_ALL}
 			</button></a>&nbsp;
 			&nbsp;<a href="{U_MOST_POPULAR}" class="link">
 			<button class="button editCP_switch" type="submit" title="{L_STATS_MOST_POPULAR}" style="font-size:9px;">
-			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			<i class="fa fa-star-o fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
 			{L_STATS_MOST_POPULAR}
 			</button></a>&nbsp;
 			<!-- BEGIN switch_toprated -->
 			&nbsp;<a href="{U_TOPRATED}" class="link">
 			<button class="button editCP_switch" type="submit" title="{L_STATS_TOPRATED}" style="font-size:9px;">
-			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			<i class="fa fa-star-o fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
 			{L_STATS_TOPRATED}
 			</button></a>&nbsp;
 			<!-- END switch_toprated -->
 			&nbsp;<a href="{U_LATEST}" class="link">
 			<button class="button editCP_switch" type="submit" title="{L_STATS_LATEST}" style="font-size:9px;">
-			<i class="fa fa-star-o" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
+			<i class="fa fa-star-o fa-fw" style="float:top;vertical-align: 25%;whitespace: false;" aria-hidden="false"></i>
 			{L_STATS_LATEST}
 			</button></a>&nbsp;
 			</span>
